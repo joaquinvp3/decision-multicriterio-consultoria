@@ -55,9 +55,9 @@ Seleccionar, entre cinco alternativas —**McKinsey, BCG, Bain, Oliver Wyman y E
 
 Para reproducir el análisis, se utilizan funciones auxiliares propias definidas en los archivos del profesor:
 
-	•	`teoriadecision_funciones_multicriterio.R`
-	•	`teoriadecision_funciones_multicriterio_utiles.R`
-	•	`teoriadecision_funciones_multicriterio_diagram.R`
+	•	teoriadecision_funciones_multicriterio.R
+	•	teoriadecision_funciones_multicriterio_utiles.R
+	•	teoriadecision_funciones_multicriterio_diagram.R
 
 ---
 
