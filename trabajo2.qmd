@@ -1,0 +1,104 @@
+---
+title: "Análisis de Decisión Multicriterio para la Elección de Consultora Estratégica"
+author: "Equipo de Juniors Consultores"
+date: "`r Sys.Date()`"
+format: html
+toc: true
+toc-depth: 2
+number-sections: true
+execute:
+  echo: true
+  warning: false
+  message: false
+---
+
+```{r setup}
+# ===============================================
+# Configuración del entorno y carga de funciones
+# ===============================================
+
+# Cargar librerías necesarias
+required_packages <- c(
+  "tidyverse", "kableExtra", "DiagrammeR", 
+  "ggplot2", "MCDA", "ahp", "PROMETHEE", "electreR"
+)
+
+# Instalar las que falten
+lapply(required_packages, function(pkg) {
+  if (!require(pkg, character.only = TRUE)) {
+    install.packages(pkg, dependencies = TRUE)
+  }
+})
+
+# Cargar funciones del profesor (archivos locales)
+source("funciones_auxiliares/teoriadecision_funciones_multicriterio.R")
+source("funciones_auxiliares/teoriadecision_funciones_multicriterio_utiles.R")
+source("funciones_auxiliares/teoriadecision_funciones_multicriterio_diagram.R")
+
+cat("✅ Entorno inicializado correctamente.\n")
+```
+
+# Introducción y planteamiento del problema
+
+El objetivo de este trabajo es aplicar distintos métodos de **decisión multicriterio** (AHP, ELECTRE, PROMETHEE y TOPSIS) para seleccionar la **mejor consultora estratégica** para un grupo de consultores juniors.\
+Las alternativas evaluadas serán:
+
+-   McKinsey & Company\
+-   Boston Consulting Group (BCG)\
+-   Bain & Company\
+-   Oliver Wyman\
+-   EY-Parthenon
+
+Cada método será aplicado con criterios de evaluación definidos según la literatura académica de la toma de decisiones estratégicas.
+
+------------------------------------------------------------------------
+
+# Definición de criterios
+
+Aquí se especificarán los criterios de evaluación, que pueden incluir, por ejemplo:
+
+| Criterio                     | Descripción                         |
+|------------------------------|-------------------------------------|
+| Prestigio y reputación       | Posición global y reconocimiento    |
+| Oportunidades de aprendizaje | Plan de carrera y mentoring         |
+| Cultura organizacional       | Entorno de trabajo y valores        |
+| Proyectos y sectores         | Diversidad de industrias y clientes |
+| Remuneración                 | Nivel salarial y beneficios         |
+
+------------------------------------------------------------------------
+
+# Aplicación del método AHP
+
+(En esta sección aplicaremos el **método AHP** usando las funciones del profesor y verificaremos la **consistencia** de la matriz de juicios.)
+
+------------------------------------------------------------------------
+
+# Aplicación del método ELECTRE
+
+(Se implementará ELECTRE I o II según la disponibilidad en las funciones cargadas.)
+
+------------------------------------------------------------------------
+
+# Aplicación del método PROMETHEE
+
+(Se calcularán los flujos positivos, negativos y netos, determinando la jerarquía final de las alternativas.)
+
+------------------------------------------------------------------------
+
+# Comparación de resultados
+
+(Se compararán los rankings obtenidos por cada método, analizando divergencias y coincidencias.)
+
+------------------------------------------------------------------------
+
+# Conclusiones
+
+(Se redactarán conclusiones sobre la toma de decisiones estratégicas y la robustez de los resultados multicriterio.)
+
+------------------------------------------------------------------------
+
+# Bibliografía
+
+-   Saaty, T. L. (1980). *The Analytic Hierarchy Process*. McGraw-Hill.\
+-   Brans, J. P., & Vincke, P. (1985). *A Preference Ranking Organisation Method (The PROMETHEE Method)*. Management Science.\
+-   Roy, B. (1991). *The Outranking Approach and the Foundations of ELECTRE Methods*. Springer.
