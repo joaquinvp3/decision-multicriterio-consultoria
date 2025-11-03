@@ -13,16 +13,10 @@ execute:
 ---
 \newpage
 ```{r setup}
-# ===============================================
-# Configuración del entorno y carga de funciones
-# ===============================================
-
-# Cargar funciones del profesor (archivos locales)
+# Cargamos funciones del profesor (archivos locales)
 source("funciones_auxiliares/teoriadecision_funciones_multicriterio.R")
 source("funciones_auxiliares/teoriadecision_funciones_multicriterio_utiles.R")
 source("funciones_auxiliares/teoriadecision_funciones_multicriterio_diagram.R")
-
-cat("✅ Entorno inicializado correctamente.\n")
 ```
 
 # Introducción y planteamiento del problema
@@ -68,6 +62,8 @@ criterios <- c(
 
 # Aplicación del método AHP
 
+## Introducción al método
+
 El **Proceso Analítico Jerárquico (AHP)**, desarrollado por Thomas L. Saaty (1980), es una de las metodologías más utilizadas en el ámbito de la **decisión multicriterio**.  
 Su principal fortaleza radica en su capacidad para **descomponer un problema complejo en niveles jerárquicos**, permitiendo estructurar el proceso de decisión de forma lógica y coherente.
 
@@ -86,126 +82,836 @@ Los juicios de comparación se basan en la **escala de Saaty (1–9)** y refleja
 
 ```{r}
 v_criterios <- c(
-  3,   # (C1 vs C2): Prestigio vs Aprendizaje
-  5,   # (C1 vs C3): Prestigio vs Cultura
-  3,   # (C1 vs C4): Prestigio vs ProyectosSectores
-  2,   # (C1 vs C5): Prestigio vs Remuneracion
-  2,   # (C2 vs C3): Aprendizaje vs Cultura
-  1/2, # (C2 vs C4): Aprendizaje vs ProyectosSectores
-  2,   # (C2 vs C5): Aprendizaje vs Remuneracion
-  1/3, # (C3 vs C4): Cultura vs ProyectosSectores
-  2,   # (C3 vs C5): Cultura vs Remuneracion
-  1/2  # (C4 vs C5): ProyectosSectores vs Remuneracion
+  3/2,  # (1,2)
+  3,    # (1,3)
+  2,    # (1,4)
+  6,    # (1,5)
+  2,    # (2,3)
+  4/3,  # (2,4)
+  4,    # (2,5)
+  2/3,  # (3,4)
+  2,    # (3,5)
+  3     # (4,5)
 )
 ```
 
 
 ### Justificación de los juicios de comparación
 
-**1. Prestigio vs Aprendizaje (3)**  
-El **prestigio de la firma** se considera **moderadamente más importante** que las oportunidades de aprendizaje.  
-Aunque el desarrollo profesional es esencial, **la marca de la consultora** tiene un fuerte impacto inicial en el currículo y en las oportunidades futuras.  
-Por eso se asigna un valor **3**, que indica una **preferencia ligera pero significativa** por el prestigio.
+**1. Prestigio vs Aprendizaje (3/2)**  
+El prestigio de la consultora se considera **ligeramente más importante** que las oportunidades de aprendizaje.  
+Se reconoce que la marca de la firma abre puertas y consolida la reputación profesional en los primeros años.
 
 ---
 
-**2. Prestigio vs Cultura (5)**  
-Se estima que el **prestigio** es **claramente más importante** que la cultura organizacional.  
-Las grandes firmas de referencia (McKinsey, BCG, Bain) ofrecen entornos exigentes, pero el peso reputacional sigue siendo un factor dominante en la elección de juniors, especialmente al inicio de la carrera.
+**2. Prestigio vs Cultura (3)**  
+El prestigio se valora **claramente por encima** de la cultura organizacional, dado que el entorno de trabajo suele adaptarse, mientras que el nombre de la empresa tiene un efecto duradero en el currículum.
 
 ---
 
-**3. Prestigio vs Proyectos y Sectores (3)**  
-El prestigio se considera **ligeramente más relevante** que la diversidad sectorial de proyectos.  
-Si bien trabajar en múltiples industrias aporta valor, el reconocimiento de la marca sigue teniendo un peso mayor en la decisión.
+**3. Prestigio vs Proyectos y Sectores (2)**  
+Se otorga una **ligera preferencia** al prestigio frente a la variedad de proyectos.  
+Aunque la exposición sectorial es útil para el aprendizaje, el reconocimiento externo de la marca sigue siendo más determinante.
 
 ---
 
-**4. Prestigio vs Remuneración (2)**  
-El prestigio supera **levemente** al criterio económico.  
-En perfiles iniciales, la diferencia salarial entre firmas top no suele ser determinante; la mayoría de juniors priorizan la marca y la proyección antes que el salario inmediato.
+**4. Prestigio vs Remuneración (6)**  
+El prestigio es **muy superior** al criterio económico.  
+Los juniors suelen aceptar condiciones salariales moderadas si ello implica incorporarse a una firma de alto prestigio.
 
 ---
 
 **5. Aprendizaje vs Cultura (2)**  
-Las **oportunidades de aprendizaje** se valoran **ligeramente más** que la cultura organizacional.  
-Se asume que, en el entorno competitivo de la consultoría, el aprendizaje técnico y metodológico es clave para el crecimiento profesional, incluso si el clima laboral es algo más exigente.
+El aprendizaje se considera **ligeramente más importante** que la cultura, ya que los primeros años se valoran como etapa de crecimiento y desarrollo intensivo de competencias.
+
 
 ---
 
-**6. Aprendizaje vs Proyectos y Sectores (1/2)**  
-Aquí se da un **peso ligeramente inferior** al aprendizaje frente a la variedad de proyectos.  
-En este contexto, se considera que trabajar en proyectos diversos y desafiantes **favorece el aprendizaje práctico**, por lo que se concede más valor a la exposición sectorial.
+**6. Aprendizaje vs Proyectos y Sectores (4/3)**  
+El aprendizaje supera **levemente** a la variedad de proyectos, porque aunque ambos están relacionados, la capacidad de formación estructurada y el mentoring interno se valoran algo más.
+
 
 ---
 
-**7. Aprendizaje vs Remuneración (2)**  
-El aprendizaje se considera **moderadamente más importante** que la remuneración.  
-Los juniors suelen aceptar una retribución algo menor si la empresa ofrece una **curva de aprendizaje acelerada** y una **mentoría sólida**.
+**7. Aprendizaje vs Remuneración (4)**  
+El aprendizaje se prioriza **claramente sobre la remuneración**, al entender que el conocimiento adquirido es una inversión a largo plazo que compensa las diferencias salariales iniciales.
+
 
 ---
 
-**8. Cultura vs Proyectos y Sectores (1/3)**  
-La **cultura organizacional** se percibe como **menos importante** que la variedad de proyectos.  
-Aun siendo relevante para la satisfacción personal, se entiende que la experiencia profesional y la exposición a diferentes industrias son determinantes para el desarrollo inicial.
+**8. Cultura vs Proyectos y Sectores (2/3)**  
+La cultura organizacional se percibe **algo menos importante** que la variedad de proyectos, ya que el trabajo en entornos diversos favorece el desarrollo y la resiliencia profesional.
+
 
 ---
 
 **9. Cultura vs Remuneración (2)**  
-La cultura se valora **ligeramente más** que la remuneración.  
-El razonamiento es que, aunque el salario es importante, el **bienestar y equilibrio personal** pueden mejorar el rendimiento y la permanencia en la firma.
+Se otorga **cierta preferencia** a la cultura frente a la remuneración, considerando que un entorno positivo mejora la retención y el compromiso.
+
 
 ---
 
-**10. Proyectos y Sectores vs Remuneración (1/2)**  
-Finalmente, la **remuneración** se considera **ligeramente más relevante** que la diversidad de proyectos.  
-Aunque los proyectos enriquecen la experiencia, una compensación justa puede ser un factor decisivo para retener talento joven.
+**10. Proyectos y Sectores vs Remuneración (3)**  
+La exposición a distintos sectores y clientes se considera **claramente más valiosa** que la remuneración en la etapa inicial de carrera, dado su impacto en el aprendizaje y la adaptabilidad.
 
 ---
 
-#### Interpretación global
+**Interpretación global**
 
-En conjunto, esta valoración refleja una **priorización racional para un perfil junior**:
+La configuración de los juicios muestra una jerarquía coherente y perfectamente consistente:
 
-- El **prestigio** es el criterio dominante (clave para la carrera).  
-- Le siguen el **aprendizaje** y los **proyectos**, muy vinculados al desarrollo profesional.  
-- La **cultura** y la **remuneración** pesan algo menos en esta etapa inicial, aunque no son irrelevantes.
+- **Prestigio**: criterio dominante, pero sin una ventaja desproporcionada.  
+- **Aprendizaje** y **Proyectos**: factores de desarrollo profesional, con peso equilibrado.  
+- **Cultura**: moderadamente valorada, pero subordinada a los criterios de crecimiento.  
+- **Remuneración**: ocupa la última posición, coherente con las prioridades de un perfil junior.  
 
-Estas comparaciones constituyen la base de la **matriz de criterios del método AHP**, a partir de la cual se calcularán los pesos relativos de cada criterio y se evaluará la **consistencia** de los juicios.
-
-
-
+Esta estructura refleja una **visión racional y estratégica** del proceso de decisión, donde se ponderan tanto la reputación externa como el aprendizaje interno.
 
 
+### Construcción de la matriz
 
-------------------------------------------------------------------------
+Ahora sí, pasamos a la definición de la matriz.
 
-# Aplicación del método ELECTRE
+```{r}
+tb_criterios <- multicriterio.crea.matrizvaloraciones_mej(
+  vector_valoraciones_diagsup = v_criterios,
+  numalternativas    = length(criterios),
+  v.nombres.alternativas = criterios
+)
 
-(Se implementará ELECTRE I o II según la disponibilidad en las funciones cargadas.)
+tb_criterios
+```
 
-------------------------------------------------------------------------
 
-# Aplicación del método PROMETHEE
+## Resolución
 
-(Se calcularán los flujos positivos, negativos y netos, determinando la jerarquía final de las alternativas.)
+El método **AHP (Analytic Hierarchy Process)** puede resolverse mediante diferentes procedimientos según la formulación matemática o la herramienta empleada.  
+Todas las variantes parten de una misma base conceptual: la descomposición jerárquica del problema y la construcción de **matrices de comparación por pares** entre criterios y alternativas.  
+Las diferencias surgen en la forma de calcular los **vectores de prioridad** y en el modo de integrar los niveles jerárquicos.
 
-------------------------------------------------------------------------
 
-# Comparación de resultados
+### Métodos de resolución
+A continuación se describen las principales modalidades trabajadas en clase:
 
-(Se compararán los rankings obtenidos por cada método, analizando divergencias y coincidencias.)
 
-------------------------------------------------------------------------
+#### **Método 1 – AHP clásico (autovector del mayor autovalor)**  
+Este enfoque corresponde al procedimiento **original propuesto por Saaty (1980)**.  
+A partir de la matriz de comparación, se calcula el **autovector asociado al mayor autovalor**, que representa las prioridades relativas entre criterios.  
+Es el método más extendido y el que constituye la base de referencia en este trabajo.  
+Funciones empleadas:  
+`multicriterio.crea.matrizvaloraciones_mej()`,  
+`multicriterio.metodoAHP.variante1.autovectormayorautovalor()`,  
+`multicriterio.metodoAHP.coef.inconsistencia()`,  
+`multicriterio.metodoAHP.pesosglobales_entabla()`.
 
-# Conclusiones
+---
 
-(Se redactarán conclusiones sobre la toma de decisiones estratégicas y la robustez de los resultados multicriterio.)
+#### **Método 2 – AHP por media geométrica**  
+Este enfoque alternativo calcula los pesos como la **media geométrica de las filas** de la matriz de comparación, seguida de una normalización.  
+Aunque ligeramente menos preciso desde el punto de vista teórico, ofrece una estimación robusta y fácilmente interpretable.  
+Función empleada: `multicriterio.metodoAHP.variante2.mediageometrica()`.
 
-------------------------------------------------------------------------
+---
 
-# Bibliografía
+#### **Método 3 – AHP completo o “de una pasada”**  
+Permite resolver el sistema jerárquico completo (criterios y alternativas) en una única ejecución.  
+El método automatiza el cálculo de pesos locales, globales y la consistencia del modelo.  
+Función empleada: `multicriterio.metodoAHP.variante3.completo()`.
 
--   Saaty, T. L. (1980). *The Analytic Hierarchy Process*. McGraw-Hill.\
--   Brans, J. P., & Vincke, P. (1985). *A Preference Ranking Organisation Method (The PROMETHEE Method)*. Management Science.\
--   Roy, B. (1991). *The Outranking Approach and the Foundations of ELECTRE Methods*. Springer.
+---
+
+#### **Método 4 – AHP multinivel (básico)**  
+Se aplica de forma estructurada **por niveles jerárquicos**, combinando manualmente los pesos de criterios y de alternativas.  
+Es especialmente útil cuando la jerarquía contiene subcriterios intermedios.  
+Función empleada: `multicriterio.metodoAHP.variante3.basico()`.
+
+---
+
+#### **Método 5 – AHP con representación jerárquica (DiagrammeR)**  
+Incorpora la **visualización del árbol jerárquico** del modelo mediante la librería DiagrammeR, lo que permite representar de forma gráfica la relación entre objetivo, criterios y alternativas.  
+Función empleada: `multicriterio.metodoahp.diagrama()`.
+
+---
+
+#### **Método 6 – AHP con paquete oficial `ahp`**  
+El paquete `ahp` de R implementa el método a partir de un archivo de configuración en formato **YAML**, que define la jerarquía, los pesos y las comparaciones.  
+Permite ejecutar el análisis y visualizar los resultados de manera interactiva.  
+Principales funciones: `ahp::Load()`, `ahp::Calculate()`, `ahp::RunGUI()`.
+
+### Método 1 - AHP clásico (autovector del mayor autovalor)
+
+#### Pesos y consistencia
+
+Comencemos con el cálculo de pesos de criterios por autovector, el vector de prioridades y la verificación de la consistencia.
+```{r}
+# Cálculo de pesos de criterios por autovector
+res_criterios <-
+    multicriterio.metodoAHP.variante1.autovectormayorautovalor(tb_criterios)
+
+# Vector de prioridades relativas (suma = 1)
+pesos_criterios <- res_criterios$valoraciones.ahp
+# Mostrar en forma de tabla ordenada
+library(kableExtra)
+kbl(
+  data.frame(
+    Criterio = names(pesos_criterios),
+    Peso = round(pesos_criterios, 4)),
+    caption = "Pesos de los criterios obtenidos por el Método 1 
+    (autovector principal)"
+) %>%
+  kable_styling(latex_options = "HOLD_position")
+```
+
+Verifiquemos la consistencia de la matriz de criterios.
+```{r}
+inc_criterios <- multicriterio.metodoAHP.coef.inconsistencia(tb_criterios)
+inc_criterios$mensaje
+inc_criterios$RI.coef.inconsistencia
+```
+
+#### Evaluación de las alternativas respecto a cada criterio (nivel 3)
+
+Una vez determinados los pesos relativos de los criterios y comprobada la consistencia de los juicios, el siguiente paso dentro del **Método 1 (AHP clásico)** consiste en **evaluar las alternativas con respecto a cada criterio** del modelo.  
+
+En este nivel del análisis se busca determinar **cómo se comporta cada consultora estratégica** —McKinsey, BCG, Bain, Oliver Wyman y EY-Parthenon— en relación con las distintas dimensiones de decisión establecidas:  
+
+- Prestigio  
+- Aprendizaje  
+- Cultura organizacional  
+- Diversidad de proyectos y sectores  
+- Remuneración  
+
+Cada matriz representa, por tanto, el **juicio del decisor** sobre la importancia relativa de las alternativas en ese criterio.  
+A partir de ellas se calculan los **pesos locales de cada alternativa**, que reflejan su prioridad interna dentro del criterio analizado.  
+Finalmente, se verifica la **consistencia individual** de las matrices para asegurar la coherencia de las comparaciones antes de combinar los resultados en el nivel global.
+
+En las siguientes secciones se muestran las matrices y resultados obtenidos para cada criterio, comenzando por el **Prestigio**.
+
+Definiremos previamente nuestro vector de alternativas:
+
+```{r}
+alts <- c("McKinsey", "BCG", "Bain", "OliverWyman", "EY-Parthenon")
+```
+
+##### Criterio: Prestigio
+
+Comencemos definiendo 
+```{r}
+v_prestigio <- c(
+  2,   # (McK vs BCG)
+  3,   # (McK vs Bain)
+  4,   # (McK vs OliverWyman)
+  5,   # (McK vs EY-Parthenon)
+  2,   # (BCG vs Bain)
+  3,   # (BCG vs OliverWyman)
+  4,   # (BCG vs EY-Parthenon)
+  2,   # (Bain vs OliverWyman)
+  3,   # (Bain vs EY-Parthenon)
+  2    # (OliverWyman vs EY-Parthenon)
+)
+
+tb_prestigio <- multicriterio.crea.matrizvaloraciones_mej(
+  v_prestigio,
+  numalternativas = length(alts),
+  v.nombres.alternativas = alts
+)
+
+# Pesos locales y consistencia
+pl_prestigio <-
+    multicriterio.metodoAHP.variante1.autovectormayorautovalor(tb_prestigio)
+pesos_prestigio <- pl_prestigio$valoraciones.ahp
+
+consistencia_prestigio <-
+    multicriterio.metodoAHP.coef.inconsistencia(tb_prestigio)
+consistencia_prestigio$RI.coef.inconsistencia
+consistencia_prestigio$mensaje
+```
+
+Tenemos que nuestros resultados son consistentes. Veamos ahora los pesos finales.
+
+```{r}
+library(kableExtra)
+
+kbl(
+  data.frame(Alternativa = alts, Peso = round(pesos_prestigio, 4)),
+  caption = "Pesos locales de las alternativas según el criterio «Prestigio»",
+  booktabs = TRUE
+) %>%
+  kable_styling(latex_options = "HOLD_position")
+```
+
+**Interpretación:**
+
+Los resultados muestran que McKinsey y BCG son percibidas como las consultoras de mayor prestigio internacional, seguidas por Bain, mientras que Oliver Wyman y EY-Parthenon ocupan posiciones secundarias.
+Esta jerarquía es coherente con los rankings habituales del sector (Vault, Financial Times, Forbes). La consistencia de la matriz confirma la estabilidad de estos juicios.
+
+##### Criterio: Aprendizaje
+
+El segundo criterio considerado es el **Aprendizaje**, entendido como la capacidad de la consultora para ofrecer un entorno de desarrollo profesional, formación estructurada y oportunidades de crecimiento intelectual para perfiles junior.  
+
+Este criterio es fundamental, ya que la etapa inicial de carrera en consultoría se caracteriza por una **curva de aprendizaje muy pronunciada**, donde la exposición a metodologías, proyectos diversos y tutorización por parte de profesionales senior determina en gran medida la evolución del consultor.  
+
+En este contexto, se estima que **McKinsey** y **BCG** destacan por sus programas de formación formalizados y su mentoring interno; **Bain** mantiene también un alto nivel de aprendizaje práctico; mientras que **Oliver Wyman** y **EY-Parthenon** presentan estructuras de desarrollo menos homogéneas.  
+
+A partir de estas consideraciones se construye la siguiente **matriz de comparación por pares**, expresando las preferencias relativas entre las consultoras según el criterio de Aprendizaje.
+
+
+```{r}
+# Juicios (valores de ejemplo consistentes y razonables)
+v_aprendizaje <- c(
+  1,   # (McK vs BCG) ~ igual aprendizaje
+  2,   # (McK vs Bain) ligeramente superior
+  3,   # (McK vs OW)
+  4,   # (McK vs EYP)
+  2,   # (BCG vs Bain)
+  3,   # (BCG vs OW)
+  4,   # (BCG vs EYP)
+  2,   # (Bain vs OW)
+  3,   # (Bain vs EYP)
+  2    # (OW vs EYP)
+)
+
+tb_aprendizaje <- multicriterio.crea.matrizvaloraciones_mej(
+  v_aprendizaje,
+  numalternativas = length(alts),
+  v.nombres.alternativas = alts
+)
+
+# Cálculo de pesos y consistencia
+pl_aprendizaje <-
+    multicriterio.metodoAHP.variante1.autovectormayorautovalor(tb_aprendizaje)
+pesos_aprendizaje <- pl_aprendizaje$valoraciones.ahp
+
+consistencia_aprendizaje <-
+    multicriterio.metodoAHP.coef.inconsistencia(tb_aprendizaje)
+consistencia_aprendizaje$RI.coef.inconsistencia
+consistencia_aprendizaje$mensaje
+
+# Tabla de resultados
+library(kableExtra)
+
+kbl(
+  data.frame(Alternativa = alts, Peso = round(pesos_aprendizaje, 4)),
+  caption = "Pesos locales de las alternativas según el criterio Aprendizaje",
+  booktabs = TRUE
+) %>%
+  kable_styling(latex_options = "HOLD_position")
+```
+
+**Interpretación:**  
+
+Los resultados indican que **McKinsey** y **BCG** presentan los mayores valores de prioridad local en el criterio de Aprendizaje, lo que refleja su inversión en programas de formación, metodologías internas y mentoring estructurado.  
+**Bain** mantiene también una posición fuerte, mientras que **Oliver Wyman** y **EY-Parthenon** ocupan posiciones algo inferiores, aunque siguen ofreciendo un entorno valioso de aprendizaje práctico.  
+La consistencia de la matriz (RI < 0.10) confirma la coherencia de los juicios emitidos.
+
+##### Criterio: Cultura organizacional
+
+El tercer criterio considerado es la **Cultura organizacional**, entendida como el conjunto de valores, clima laboral, estilo de liderazgo y equilibrio entre exigencia y bienestar profesional dentro de cada firma.  
+
+Este aspecto resulta especialmente relevante para los consultores junior, ya que condiciona la **experiencia diaria de trabajo**, la **motivación personal** y la **retención de talento** a medio plazo.  
+Si bien el entorno de la consultoría estratégica suele ser altamente competitivo, algunas firmas logran equilibrar un **alto rendimiento** con una **cultura colaborativa y de desarrollo humano**.
+
+De acuerdo con la percepción general del sector y la información disponible en rankings y testimonios, se considera que **Bain & Company** y **EY-Parthenon** destacan por ofrecer entornos culturales más cercanos y colaborativos, mientras que **McKinsey** y **BCG** mantienen culturas más exigentes y orientadas al alto rendimiento. **Oliver Wyman** se sitúa en un punto intermedio.
+
+A partir de estas consideraciones se establece la siguiente matriz de comparación entre las consultoras según el criterio de Cultura organizacional.
+
+
+```{r}
+# Juicios consistentes y realistas según la descripción anterior
+v_cultura <- c(
+  1/2,  # (McK vs BCG) -> BCG ligeramente mejor cultura
+  1/3,  # (McK vs Bain) -> Bain claramente mejor cultura
+  1/2,  # (McK vs OW) -> OW ligeramente mejor
+  1/4,  # (McK vs EYP) -> EYP notablemente mejor
+  1/2,  # (BCG vs Bain)
+  1,    # (BCG vs OW)
+  1/3,  # (BCG vs EYP)
+  1/2,  # (Bain vs OW)
+  1/2,  # (Bain vs EYP)
+  1/2   # (OW vs EYP)
+)
+
+tb_cultura <- multicriterio.crea.matrizvaloraciones_mej(
+  v_cultura,
+  numalternativas = length(alts),
+  v.nombres.alternativas = alts
+)
+
+# Cálculo de pesos y consistencia
+pl_cultura <-
+    multicriterio.metodoAHP.variante1.autovectormayorautovalor(tb_cultura)
+pesos_cultura <- pl_cultura$valoraciones.ahp
+
+consistencia_cultura <-
+    multicriterio.metodoAHP.coef.inconsistencia(tb_cultura)
+consistencia_cultura$RI.coef.inconsistencia
+consistencia_cultura$mensaje
+
+# Tabla de resultados
+library(kableExtra)
+
+kbl(
+  data.frame(Alternativa = alts, Peso = round(pesos_cultura, 4)),
+  caption = "Pesos locales de las alternativas según el criterio 
+  Cultura organizacional",
+  booktabs = TRUE
+) %>%
+  kable_styling(latex_options = "HOLD_position")
+```
+
+**Interpretación:** 
+
+Los resultados reflejan que **EY-Parthenon** obtiene la mayor ponderación en el criterio de Cultura organizacional, seguidas de **Oliver Wyman** y **Bain & Company**, que también mantienen un entorno de trabajo equilibrado.  
+Por el contrario, **McKinsey** y **BCG** presentan culturas más orientadas a la excelencia y la exigencia, percibidas como menos favorables para el bienestar de perfiles junior.  
+El índice de consistencia se mantiene dentro de límites aceptables (RI < 0.10), lo que garantiza la coherencia de los juicios emitidos.
+
+
+##### Criterio: Proyectos y Sectores
+
+El cuarto criterio hace referencia a la **diversidad y relevancia de los proyectos** en los que las consultoras participan, así como al **abanico de sectores e industrias** a los que se exponen sus equipos de trabajo.  
+
+Para un consultor junior, este aspecto es crucial, ya que determina la **variedad de experiencias** que adquirirá y la **amplitud de su formación estratégica**.  
+La posibilidad de trabajar en proyectos internacionales, multidisciplinares y con clientes de alto nivel constituye un factor diferencial en la etapa inicial de la carrera.
+
+Según la información pública y la reputación en el sector, **McKinsey** y **BCG** ofrecen la mayor diversidad de proyectos y una presencia global en sectores de alto impacto; **Bain** mantiene un alcance similar aunque algo más focalizado; **Oliver Wyman** destaca por su especialización en servicios financieros y riesgo; mientras que **EY-Parthenon**, aunque en crecimiento, aún presenta una cartera de proyectos más limitada en comparación con las tres primeras.
+
+Con base en estas consideraciones se construye la matriz de comparación por pares de las alternativas según el criterio de Proyectos y Sectores.
+
+
+```{r}
+# Juicios consistentes y razonables según la descripción anterior
+v_proyectos <- c(
+  1,   # (McK vs BCG): equivalentes en alcance
+  2,   # (McK vs Bain): McK ligeramente superior
+  3,   # (McK vs OW): claramente superior
+  4,   # (McK vs EYP): muy superior
+  2,   # (BCG vs Bain): BCG ligeramente superior
+  3,   # (BCG vs OW): claramente superior
+  4,   # (BCG vs EYP): muy superior
+  2,   # (Bain vs OW): ligeramente superior
+  3,   # (Bain vs EYP): claramente superior
+  2    # (OW vs EYP): ligeramente superior
+)
+
+tb_proyectos <- multicriterio.crea.matrizvaloraciones_mej(
+  v_proyectos,
+  numalternativas = length(alts),
+  v.nombres.alternativas = alts
+)
+
+# Cálculo de pesos y consistencia
+pl_proyectos <-
+    multicriterio.metodoAHP.variante1.autovectormayorautovalor(tb_proyectos)
+pesos_proyectos <- pl_proyectos$valoraciones.ahp
+
+consistencia_proyectos <-
+    multicriterio.metodoAHP.coef.inconsistencia(tb_proyectos)
+consistencia_proyectos$RI.coef.inconsistencia
+consistencia_proyectos$mensaje
+
+# Tabla de resultados
+library(kableExtra)
+
+kbl(
+  data.frame(Alternativa = alts, Peso = round(pesos_proyectos, 4)),
+  caption = "Pesos locales de las alternativas según el criterio 
+  Proyectos y Sectores",
+  booktabs = TRUE
+) %>%
+  kable_styling(latex_options = "HOLD_position")
+```
+
+**Interpretación:**  
+
+Los resultados muestran que **McKinsey** y **BCG** se sitúan como líderes en el criterio de Proyectos y Sectores, lo que refleja su gran alcance global, la diversidad de industrias atendidas y la complejidad estratégica de sus encargos.  
+**Bain** mantiene un nivel competitivo, mientras que **Oliver Wyman** presenta una especialización sectorial más acotada (particularmente en finanzas y riesgo).  
+**EY-Parthenon** ocupa la última posición, coherente con su menor presencia en proyectos internacionales de gran escala.  
+El índice de consistencia es aceptable (RI < 0.10), garantizando la validez de los juicios comparativos.
+
+##### Criterio: Remuneración
+
+El último criterio considerado es la **Remuneración**, que engloba tanto el salario base como los incentivos, beneficios y percepciones económicas asociadas al puesto de consultor junior en cada firma.  
+
+Aunque los perfiles recién incorporados suelen priorizar el aprendizaje y el prestigio de la consultora, la remuneración constituye un elemento relevante en la toma de decisiones, especialmente en términos de **atracción y retención de talento**.  
+Las diferencias salariales entre firmas top no son excesivamente grandes, pero existen matices vinculados al **coste de vida en las oficinas principales**, los **bonos anuales**, o la **progresión salarial** dentro de la organización.
+
+En este sentido, los datos disponibles y las comparaciones del sector sugieren que **McKinsey**, **BCG** y **Bain** se sitúan en el grupo de remuneraciones más elevadas; **Oliver Wyman** ofrece condiciones competitivas, aunque ligeramente inferiores; y **EY-Parthenon**, pese a su rápida expansión, tiende a posicionarse un escalón por debajo en este aspecto.
+
+A continuación se presenta la matriz de comparación de las alternativas según el criterio de Remuneración.
+
+
+```{r}
+# Juicios consistentes y coherentes con la descripción anterior
+v_remuneracion <- c(
+  1,   # (McK vs BCG): equivalentes
+  2,   # (McK vs Bain): ligeramente superior
+  3,   # (McK vs OW): claramente superior
+  4,   # (McK vs EYP): muy superior
+  1,   # (BCG vs Bain): equivalentes
+  2,   # (BCG vs OW): ligeramente superior
+  3,   # (BCG vs EYP): claramente superior
+  2,   # (Bain vs OW): ligeramente superior
+  3,   # (Bain vs EYP): claramente superior
+  2    # (OW vs EYP): ligeramente superior
+)
+
+tb_remuneracion <- multicriterio.crea.matrizvaloraciones_mej(
+  v_remuneracion,
+  numalternativas = length(alts),
+  v.nombres.alternativas = alts
+)
+
+# Cálculo de pesos y consistencia
+pl_remuneracion <-
+    multicriterio.metodoAHP.variante1.autovectormayorautovalor(tb_remuneracion)
+pesos_remuneracion <- pl_remuneracion$valoraciones.ahp
+
+consistencia_remuneracion <-
+    multicriterio.metodoAHP.coef.inconsistencia(tb_remuneracion)
+consistencia_remuneracion$RI.coef.inconsistencia
+consistencia_remuneracion$mensaje
+
+# Tabla de resultados
+library(kableExtra)
+
+kbl(
+  data.frame(Alternativa = alts, Peso = round(pesos_remuneracion, 4)),
+  caption = "Pesos locales de las alternativas según el criterio Remuneración",
+  booktabs = TRUE
+) %>%
+  kable_styling(latex_options = "HOLD_position")
+```
+
+**Interpretación:**  
+
+Los resultados evidencian que **McKinsey**, **BCG** y **Bain** ofrecen las condiciones salariales más competitivas del conjunto de consultoras analizadas, coherentes con su posicionamiento global y sus políticas de compensación.  
+**Oliver Wyman** se mantiene en un rango intermedio, mientras que **EY-Parthenon**, aunque ofrece paquetes atractivos de beneficios y oportunidades de crecimiento, presenta una remuneración base ligeramente inferior.  
+La matriz muestra un nivel adecuado de consistencia (RI < 0.10), por lo que los juicios de comparación se consideran válidos y estables.
+
+#### Integración de resultados y obtención del ranking global
+
+Una vez determinadas las ponderaciones de los criterios y los pesos locales de las alternativas en cada uno de ellos, el último paso del **Método 1 del AHP (autovector del mayor autovalor)** consiste en **integrar toda la información** para obtener la **prioridad global de las alternativas**.
+
+Este proceso de integración combina:
+1. Los **pesos de los criterios** (nivel jerárquico superior), que representan su importancia relativa en la decisión.
+2. Los **pesos locales de las alternativas** dentro de cada criterio (nivel inferior).
+
+La combinación de ambos niveles se realiza mediante una **agregación ponderada**, donde cada alternativa recibe un peso global resultante de la suma de sus valoraciones locales multiplicadas por la importancia de cada criterio.  
+El resultado final proporciona un **ranking completo de las consultoras estratégicas**, ordenadas según su idoneidad global para el perfil junior analizado.
+
+En esta sección:
+- Se construirá la matriz que reúne los pesos locales de las alternativas por criterio.  
+- Se aplicará la función de integración correspondiente para obtener los **pesos globales**.  
+- Finalmente, se presentará el **orden de preferencia final** y se interpretarán los resultados a nivel estratégico.
+
+**Paso 1 · Reunir los pesos locales por criterio**
+
+Agrupamos, en una única matriz, los **pesos locales de las alternativas** que ya calculamos para cada criterio (Prestigio, Aprendizaje, Cultura, Proyectos y Remuneración).  
+Cada **fila** será un criterio y cada **columna** una alternativa (McKinsey, BCG, …).
+
+
+```{r}
+mat_pesos_locales <- rbind(
+  "Prestigio"          = pesos_prestigio,
+  "Aprendizaje"        = pesos_aprendizaje,
+  "Cultura"            = pesos_cultura,
+  "ProyectosSectores"  = pesos_proyectos,
+  "Remuneracion"       = pesos_remuneracion
+)
+mat_pesos_locales
+```
+
+**Paso 2 · Integración (criterios × alternativas)**
+
+Aplicamos la **agregación ponderada**: combinamos los pesos de criterios con los pesos locales de alternativas para obtener los **pesos globales**.  
+Utilizamos la función de clase que deja todo “en tabla”.
+
+```{r}
+# Integración con la función del profesor
+tabla_global <- multicriterio.metodoAHP.pesosglobales_entabla(
+  pesos_criterios,
+  mat_pesos_locales
+)
+
+# Vista rápida
+tabla_global
+```
+
+**Paso 3 · Presentación y ranking final**
+Mostramos la tabla final con formato y ordenamos las alternativas por su **peso global** (de mayor a menor).
+
+
+```{r}
+library(kableExtra)
+
+# Tabla bonita (fijada en posición bajo el título en PDF)
+kbl(
+  tabla_global,
+  digits = 4,
+  caption = "AHP (Método 1): Integración de pesos y ranking global",
+  booktabs = TRUE
+) %>%
+  kable_styling(latex_options = c("HOLD_position", "scale_down"))
+```
+
+#### Interpretación de resultados y conclusiones del Método 1
+
+El resultado del proceso de integración del **método AHP clásico (autovector del mayor autovalor)** muestra una jerarquía clara en la preferencia global de las consultoras estratégicas analizadas.  
+El ranking final obtenido es el siguiente:
+
+1. **McKinsey & Company** (0.3275)  
+2. **Boston Consulting Group (BCG)** (0.2715)  
+3. **Bain & Company** (0.1785)  
+4. **Oliver Wyman** (0.1182)  
+5. **EY-Parthenon** (0.1043)
+
+La **ponderación global más alta de McKinsey (32.7%)** confirma su posición de liderazgo en prácticamente todos los criterios considerados, especialmente en **Prestigio**, **Aprendizaje** y **Proyectos y Sectores**.  
+BCG se sitúa muy próxima, consolidando un segundo lugar firme, con un perfil equilibrado entre prestigio, cultura y aprendizaje.  
+Bain aparece en tercer lugar, reflejando un desempeño sólido pero algo menos destacado en algunos criterios clave.  
+
+En el segundo bloque del ranking, **Oliver Wyman** y **EY-Parthenon** presentan puntuaciones más moderadas, coherentes con su menor reconocimiento global y su especialización sectorial.  
+No obstante, ambas ofrecen propuestas de valor diferenciadas: Oliver Wyman por su enfoque técnico y EY-Parthenon por su cultura más cercana.
+
+En conjunto, el modelo evidencia una **consistencia sólida de los juicios (RI < 0.10)** y un resultado **estable y coherente** con la realidad del mercado de consultoría estratégica.  
+El peso relativo de las alternativas refleja una **preferencia racional para un perfil junior**, priorizando factores de **marca, aprendizaje y exposición internacional** frente a elementos más tangibles como la remuneración inmediata.
+
+Este cierre del Método 1 constituye la base de referencia para las siguientes secciones del trabajo, donde se aplicarán **otras variantes del AHP** y métodos alternativos de decisión multicriterio (ELECTRE y PROMETHEE), con el fin de comparar la **robustez y estabilidad del orden de preferencias** obtenido.
+
+### Método 2 - AHP por media geométrica
+En esta variante, las prioridades se obtienen calculando la **media geométrica de cada fila** de la matriz de comparación y normalizándola.  
+La **matriz de criterios** es la misma que en el Método 1 (no cambia la base de juicios), cambia **solo** el procedimiento de cálculo de los pesos.
+
+**Paso 1 · Pesos de criterios con media geométrica**
+
+```{r}
+# Reutilizamos tb_criterios ya definido
+# Cálculo de pesos de criterios por media geométrica
+res_criterios_mg <-
+    multicriterio.metodoAHP.variante2.mediageometrica(tb_criterios)
+pesos_criterios_mg <- res_criterios_mg$valoraciones.ahp
+
+# Consistencia (la de la misma matriz, se calcula igual que antes)
+inc_criterios_mg <-
+    multicriterio.metodoAHP.coef.inconsistencia(tb_criterios)
+inc_criterios_mg$RI.coef.inconsistencia
+```
+
+Encontramos que los resultados son consistentes. Presentemos nuestros nuevos pesos.
+
+```{r}
+# Presentación
+library(kableExtra)
+kbl(
+    data.frame(Criterio = names(pesos_criterios_mg),
+                Peso_MediaGeom = round(pesos_criterios_mg, 4)),
+    row.names = FALSE,
+    caption = "Pesos de criterios por media geométrica",
+    booktabs = TRUE
+) %>%
+  kable_styling(latex_options = c("HOLD_position"))
+```
+
+**Paso 2 · Calcular los pesos locales de las alternativas (por criterio)**
+
+Al igual que en el método anterior, en esta fase se analizan las **alternativas** —McKinsey, BCG, Bain, Oliver Wyman y EY-Parthenon— con respecto a cada uno de los **criterios definidos**: Prestigio, Aprendizaje, Cultura organizacional, Proyectos y Sectores, y Remuneración.
+
+La diferencia radica en el **procedimiento matemático**: en lugar de calcular el autovector asociado al mayor autovalor, se obtiene el **vector de prioridades** mediante la **media geométrica** de las filas de cada matriz de comparación.
+
+
+```{r}
+# Prestigio
+pl_prestigio_mg <-
+    multicriterio.metodoAHP.variante2.mediageometrica(tb_prestigio)
+pesos_prestigio_mg <- pl_prestigio_mg$valoraciones.ahp
+
+# Aprendizaje
+pl_aprendizaje_mg <-
+    multicriterio.metodoAHP.variante2.mediageometrica(tb_aprendizaje)
+pesos_aprendizaje_mg <- pl_aprendizaje_mg$valoraciones.ahp
+
+# Cultura
+pl_cultura_mg <-
+    multicriterio.metodoAHP.variante2.mediageometrica(tb_cultura)
+pesos_cultura_mg <- pl_cultura_mg$valoraciones.ahp
+
+# Proyectos y Sectores
+pl_proyectos_mg <-
+    multicriterio.metodoAHP.variante2.mediageometrica(tb_proyectos)
+pesos_proyectos_mg <- pl_proyectos_mg$valoraciones.ahp
+
+# Remuneración
+pl_remuneracion_mg <-
+    multicriterio.metodoAHP.variante2.mediageometrica(tb_remuneracion)
+pesos_remuneracion_mg <- pl_remuneracion_mg$valoraciones.ahp
+```
+
+**Paso 3 · Integración de resultados y obtención del ranking global**
+
+Una vez calculados los pesos de los criterios y los pesos locales de las alternativas según cada criterio mediante la **media geométrica**, el siguiente paso consiste en **integrar los resultados** para determinar la **prioridad global** de cada alternativa.
+
+Al igual que en el Método 1, la integración se realiza aplicando una **agregación ponderada**, donde cada alternativa recibe un peso global en función de:
+1. La **importancia relativa de cada criterio**, expresada en los pesos obtenidos en el nivel superior.
+2. Su **desempeño local** dentro de cada criterio, calculado ahora con el método de la media geométrica.
+
+El objetivo es obtener un **ranking final de consultoras** que refleje las preferencias globales del decisor bajo esta segunda aproximación.  
+Comparar estos resultados con los obtenidos mediante el método del autovector permitirá valorar la **robustez y estabilidad del modelo AHP**, así como el impacto de las diferencias en el procedimiento de cálculo.
+
+
+```{r}
+# Objetos previamente definidos:
+# - pesos_criterios_mg (vector con nombres de criterios)
+# - pesos_prestigio_mg, pesos_aprendizaje_mg,
+#   pesos_cultura_mg, pesos_proyectos_mg, pesos_remuneracion_mg 
+# (vectores con nombres de alternativas)
+# - alts <- c("McKinsey","BCG","Bain","OliverWyman","EY-Parthenon")
+
+# 1) Construir la matriz de pesos locales (filas=criterios, columnas=alternativas)
+mat_pesos_locales_mg <- rbind(
+  "Prestigio"         = pesos_prestigio_mg,
+  "Aprendizaje"       = pesos_aprendizaje_mg,
+  "Cultura"           = pesos_cultura_mg,
+  "ProyectosSectores" = pesos_proyectos_mg,
+  "Remuneracion"      = pesos_remuneracion_mg
+)
+# 2) Integración en tabla
+tabla_global_mg <- multicriterio.metodoAHP.pesosglobales_entabla(
+  pesos_criterios_mg,
+  mat_pesos_locales_mg
+)
+
+# 3) Presentación de la tabla global
+kbl(
+  tabla_global_mg,
+  digits = 4,
+  caption = "AHP (Método 2 · Media geométrica): 
+    Integración de pesos y ranking global",
+  booktabs = TRUE
+) %>%
+  kable_styling(latex_options = c("HOLD_position", "scale_down"))
+```
+
+**Interpretación de resultados y conclusiones del Método 2 (Media geométrica)**
+
+El análisis realizado mediante la variante del AHP basada en la **media geométrica** arroja un resultado **plenamente coherente** con el obtenido a través del método clásico por autovector.  
+La jerarquía global de las consultoras estratégicas se mantiene inalterada, lo que evidencia la **consistencia y estabilidad** del modelo de decisión empleado.
+
+El ranking final es el siguiente:
+
+1. **McKinsey & Company** (0.3273)  
+2. **Boston Consulting Group (BCG)** (0.2721)  
+3. **Bain & Company** (0.1780)  
+4. **Oliver Wyman** (0.1173)  
+5. **EY-Parthenon** (0.1053)
+
+Los valores globales de prioridad son prácticamente idénticos a los del Método 1, confirmando que las **diferencias entre ambos procedimientos de cálculo** (autovector vs. media geométrica) **no alteran la estructura de preferencias** ni el orden relativo de las alternativas.
+
+Desde una perspectiva interpretativa:
+
+- **McKinsey** mantiene su liderazgo con la mayor ponderación global, destacando en prestigio, aprendizaje y remuneración.  
+- **BCG** se consolida como segunda opción, con un perfil equilibrado en la mayoría de criterios.  
+- **Bain** ocupa la tercera posición, con buen desempeño general pero menor peso en los criterios dominantes.  
+- **Oliver Wyman** y **EY-Parthenon** se sitúan en posiciones finales, coherentes con su menor proyección internacional y tamaño relativo.
+
+La coincidencia del orden final entre ambos métodos pone de manifiesto la **robustez del modelo AHP aplicado**: los resultados no dependen del enfoque de cálculo específico, sino de la estructura de juicios establecida por el decisor.  
+En consecuencia, puede concluirse que el modelo de decisión multicriterio propuesto ofrece **confiabilidad, coherencia y estabilidad** para orientar la elección de la consultora estratégica más adecuada para un perfil junior.
+
+### Método 3 – AHP “completo” (variante3.completo)
+
+En esta variante resolvemos el problema **de una sola pasada**: partiendo de la **misma matriz de criterios** y de las **mismas matrices de alternativas por criterio**, la función integrada calcula automáticamente los **pesos locales**, los **pesos globales** y la **tabla final**.  
+El objetivo es contrastar que, usando la misma base de juicios, el resultado agregado coincide (o es muy cercano) al obtenido con los métodos anteriores.
+
+**Paso 1 · Construir el array de nivel 2 (alternativas por criterio)**
+
+```{r}
+# Suponemos ya definidos:
+# tb_criterios,
+# tb_prestigio, tb_aprendizaje, tb_cultura, tb_proyectos, tb_remuneracion,
+# las alternativas y criterios
+
+# Armamos el array 3D: [alt x alt x criterio]
+num.alt <- length(alts)
+num.cri <- length(criterios)
+
+Xarray_nivel2 <- array(NA_real_, dim = c(num.alt, num.alt, num.cri))
+Xarray_nivel2[,,1] <- tb_prestigio
+Xarray_nivel2[,,2] <- tb_aprendizaje
+Xarray_nivel2[,,3] <- tb_cultura
+Xarray_nivel2[,,4] <- tb_proyectos
+Xarray_nivel2[,,5] <- tb_remuneracion
+
+dimnames(Xarray_nivel2)[[1]] <- alts
+dimnames(Xarray_nivel2)[[2]] <- alts
+dimnames(Xarray_nivel2)[[3]] <- criterios
+```
+
+**Paso 2 · Ejecutar el método “completo” y mostrar la tabla**
+
+```{r}
+# Ejecución del método completo
+res_completo <- multicriterio.metodoAHP.variante3.completo(tb_criterios, Xarray_nivel2)
+
+# Tabla de pesos (por criterio y ponderadores globales)
+tabla_completo <- res_completo$pesos.globales_entabla
+
+kbl(
+  tabla_completo,
+  digits = 4,
+  caption = "AHP (Método 3 · Completo): Integración automática de pesos",
+  booktabs = TRUE
+) %>%
+  kable_styling(latex_options = c("HOLD_position","scale_down"))
+```
+
+**Interpretación de resultados y conclusiones del Método 3 (AHP completo)**
+
+El método AHP “completo” permite resolver la jerarquía entera de decisión en una sola ejecución, combinando los pesos de criterios y las matrices de alternativas dentro de una única estructura de cálculo.  
+A partir de los mismos juicios de comparación definidos previamente, el modelo genera automáticamente los **pesos locales**, los **pesos globales** y el **ranking final** de las alternativas.
+
+El resultado obtenido es el siguiente:
+
+1. **McKinsey & Company** (0.3263)  
+2. **Boston Consulting Group (BCG)** (0.2712)  
+3. **Bain & Company** (0.1792)  
+4. **Oliver Wyman** (0.1187)  
+5. **EY-Parthenon** (0.1047)
+
+La **coincidencia exacta del orden de preferencia** con los Métodos 1 (autovector del mayor autovalor) y 2 (media geométrica) demuestra la **consistencia estructural del modelo AHP** aplicado a este problema de decisión.  
+Las pequeñas diferencias en los valores numéricos son esperables, dado que esta versión normaliza internamente las matrices y agrega los pesos mediante un procedimiento automatizado, pero sin modificar la jerarquía final.
+
+Desde una perspectiva analítica:
+
+- **McKinsey** conserva la primera posición, consolidándose como la alternativa con mayor atractivo global, destacando en prestigio, aprendizaje y remuneración.  
+- **BCG** sigue siendo la segunda opción más sólida, con un desempeño equilibrado en todos los criterios.  
+- **Bain** ocupa el tercer lugar, con un perfil competitivo pero ligeramente inferior en los factores dominantes.  
+- **Oliver Wyman** y **EY-Parthenon** cierran la clasificación, mostrando fortalezas específicas en cultura organizacional, pero menor peso global.
+
+La convergencia de resultados entre las tres variantes del AHP (autovector, media geométrica y completo) confirma que el modelo de decisión propuesto es **robusto, coherente y estable** frente a distintas formulaciones del método.  
+Ello aporta **validez metodológica** y **confiabilidad interpretativa** a las conclusiones obtenidas en el análisis multicriterio de la elección de consultora estratégica.
+
+### Método 6 – AHP con el paquete `ahp`
+
+El paquete **`ahp`** permite modelar el Proceso Analítico Jerárquico a partir de un fichero **YAML** que define la **jerarquía** (objetivo → criterios → alternativas) y las **comparaciones por pares** en cada nivel.  
+Su ventaja es doble: (i) proporciona una **estructura declarativa y auditable** del modelo, y (ii) ofrece funciones para **cálculo, análisis y visualización** (incluida una interfaz Shiny) sin necesidad de programar los pasos de agregación manualmente.
+
+En este trabajo reutilizaremos **los mismos juicios** definidos en los métodos anteriores (criterios y matrices de alternativas), de modo que el modelo con `ahp` sea estrictamente **comparables** con los resultados previos.  
+
+**Qué haremos:**
+1. **Construir el fichero YAML** del modelo (de forma programática desde R para garantizar reproducibilidad).
+2. **Cargar y calcular** el modelo con `ahp::Load()` y `ahp::Calculate()`.
+3. **Obtener prioridades** de criterios y alternativas, y el **ranking global**.
+4. **Visualización**/inspección (`ahp::Analyze()`, `ahp::RunGUI()`).
+5. **Comparar** con los métodos AHP 1–3 para verificar la **robustez**.
+
+
+```{r}
+install.packages("devtools")
+devtools::install_github("calote/ahp", build_vignettes = TRUE)
+library(ahp)
+```
+
+```{r}
+modelo <- Load("modelo_consultoras.ahp")
+Calculate(modelo)
+Analyze(modelo)
+RunGUI(modelo) 
+```
