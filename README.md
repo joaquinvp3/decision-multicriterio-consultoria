@@ -27,13 +27,12 @@ Seleccionar, entre cinco alternativas —**McKinsey, BCG, Bain, Oliver Wyman y E
 ## ⚙️ Estructura del proyecto
 ```plaintext
 📂 decision-multicriterio-consultoras/
-├── data/                          # Datos base y matrices de comparación
-├── R/                             # Scripts R con funciones y cálculos intermedios
+├── funciones_auxiliares/                             # Scripts R con funciones y cálculos intermedios
 │   ├── teoriadecision_funciones_multicriterio.R
 │   ├── teoriadecision_funciones_multicriterio_utiles.R
 │   └── teoriadecision_funciones_multicriterio_diagram.R
 ├── modelo_consultoras.ahp         # Modelo AHP en formato YAML (paquete ahp)
-├── proyecto_consultoras.qmd       # Documento principal (Quarto)
+├── trabajo2.qmd       # Documento principal (Quarto)
 ├── README.md                      # Este archivo
 └── outputs/                       # Tablas, gráficos y resultados finales
 ```
@@ -55,9 +54,10 @@ Seleccionar, entre cinco alternativas —**McKinsey, BCG, Bain, Oliver Wyman y E
 ## 🧩 Dependencias de R
 
 Para reproducir el análisis, se utilizan funciones auxiliares propias definidas en los archivos del profesor:
-	•	teoriadecision_funciones_multicriterio.R
-	•	teoriadecision_funciones_multicriterio_utiles.R
-	•	teoriadecision_funciones_multicriterio_diagram.R
+
+	•	`teoriadecision_funciones_multicriterio.R`
+	•	`teoriadecision_funciones_multicriterio_utiles.R`
+	•	`teoriadecision_funciones_multicriterio_diagram.R`
 
 ---
 
