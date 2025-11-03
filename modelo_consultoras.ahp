@@ -1,0 +1,100 @@
+Version: 2.0
+Alternatives: &alternatives
+  - McKinsey
+  - BCG
+  - Bain
+  - OliverWyman
+  - EY-Parthenon
+
+Goal:
+  name: Elegir la mejor consultora estratégica para juniors
+
+  preferences:
+    pairwise:
+      - [Prestigio, Aprendizaje, 1.5]
+      - [Prestigio, Cultura, 3]
+      - [Prestigio, ProyectosSectores, 2]
+      - [Prestigio, Remuneracion, 6]
+      - [Aprendizaje, Cultura, 2]
+      - [Aprendizaje, ProyectosSectores, 1.33]
+      - [Aprendizaje, Remuneracion, 4]
+      - [Cultura, ProyectosSectores, 0.67]
+      - [Cultura, Remuneracion, 2]
+      - [ProyectosSectores, Remuneracion, 3]
+
+  children:
+
+    Prestigio:
+      preferences:
+        pairwise:
+          - [McKinsey, BCG, 2]
+          - [McKinsey, Bain, 3]
+          - [McKinsey, OliverWyman, 4]
+          - [McKinsey, EY-Parthenon, 5]
+          - [BCG, Bain, 2]
+          - [BCG, OliverWyman, 3]
+          - [BCG, EY-Parthenon, 4]
+          - [Bain, OliverWyman, 2]
+          - [Bain, EY-Parthenon, 3]
+          - [OliverWyman, EY-Parthenon, 2]
+      children: *alternatives
+
+    Aprendizaje:
+      preferences:
+        pairwise:
+          - [McKinsey, BCG, 1]
+          - [McKinsey, Bain, 2]
+          - [McKinsey, OliverWyman, 3]
+          - [McKinsey, EY-Parthenon, 4]
+          - [BCG, Bain, 2]
+          - [BCG, OliverWyman, 3]
+          - [BCG, EY-Parthenon, 4]
+          - [Bain, OliverWyman, 2]
+          - [Bain, EY-Parthenon, 3]
+          - [OliverWyman, EY-Parthenon, 2]
+      children: *alternatives
+
+    Cultura:
+      preferences:
+        pairwise:
+          - [McKinsey, BCG, 0.5]
+          - [McKinsey, Bain, 0.33]
+          - [McKinsey, OliverWyman, 0.5]
+          - [McKinsey, EY-Parthenon, 0.25]
+          - [BCG, Bain, 0.5]
+          - [BCG, OliverWyman, 1]
+          - [BCG, EY-Parthenon, 0.33]
+          - [Bain, OliverWyman, 0.5]
+          - [Bain, EY-Parthenon, 0.5]
+          - [OliverWyman, EY-Parthenon, 0.5]
+      children: *alternatives
+
+    ProyectosSectores:
+      preferences:
+        pairwise:
+          - [McKinsey, BCG, 1]
+          - [McKinsey, Bain, 2]
+          - [McKinsey, OliverWyman, 3]
+          - [McKinsey, EY-Parthenon, 4]
+          - [BCG, Bain, 2]
+          - [BCG, OliverWyman, 3]
+          - [BCG, EY-Parthenon, 4]
+          - [Bain, OliverWyman, 2]
+          - [Bain, EY-Parthenon, 3]
+          - [OliverWyman, EY-Parthenon, 2]
+      children: *alternatives
+
+    Remuneracion:
+      preferences:
+        pairwise:
+          - [McKinsey, BCG, 1]
+          - [McKinsey, Bain, 2]
+          - [McKinsey, OliverWyman, 3]
+          - [McKinsey, EY-Parthenon, 4]
+          - [BCG, Bain, 1]
+          - [BCG, OliverWyman, 2]
+          - [BCG, EY-Parthenon, 3]
+          - [Bain, OliverWyman, 2]
+          - [Bain, EY-Parthenon, 3]
+          - [OliverWyman, EY-Parthenon, 2]
+      children: *alternatives
