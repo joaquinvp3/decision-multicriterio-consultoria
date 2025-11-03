@@ -61,7 +61,7 @@ Para reproducir el análisis, se utilizan funciones auxiliares propias definidas
 
 ---
 
-## 🎓 Autores
+## 🎓 Autor
 
 - Joaquín Vidal Pereira
 - Universidad de Sevilla - Grado en Estadística
