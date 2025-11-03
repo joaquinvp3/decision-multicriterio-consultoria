@@ -63,7 +63,7 @@ Para reproducir el análisis, se utilizan funciones auxiliares propias definidas
 
 ## 🎓 Autores
 
-Joaquín Vidal Pereira
-Universidad de Sevilla - Grado en Estadística
-Asignatura: Teoría de la Decisión
-Profesor: Pedro L. Luque
+- Joaquín Vidal Pereira
+- Universidad de Sevilla - Grado en Estadística
+- Asignatura: Teoría de la Decisión
+- Profesor: Pedro L. Luque
