@@ -1,8 +1,8 @@
 ---
 title: "Análisis de Decisión Multicriterio para la Elección de Consultora Estratégica"
-author: "Equipo de Juniors Consultores"
+author: "Joaquín Vidal"
 date: "`r Sys.Date()`"
-format: html
+format: pdf
 toc: true
 toc-depth: 2
 number-sections: true
