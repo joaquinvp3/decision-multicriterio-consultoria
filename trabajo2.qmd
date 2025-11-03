@@ -54,9 +54,129 @@ Aquí se especificarán los criterios de evaluación, que pueden incluir, por ej
 
 ------------------------------------------------------------------------
 
+Definiremos nuestro vector de criterios que usaremos en las distintas resoluciones.
+
+```{r}
+criterios <- c(
+  "Prestigio",           # C1
+  "Aprendizaje",         # C2
+  "Cultura",             # C3
+  "ProyectosSectores",   # C4
+  "Remuneracion"         # C5
+)
+```
+
 # Aplicación del método AHP
 
-(En esta sección aplicaremos el **método AHP** usando las funciones del profesor y verificaremos la **consistencia** de la matriz de juicios.)
+El **Proceso Analítico Jerárquico (AHP)**, desarrollado por Thomas L. Saaty (1980), es una de las metodologías más utilizadas en el ámbito de la **decisión multicriterio**.  
+Su principal fortaleza radica en su capacidad para **descomponer un problema complejo en niveles jerárquicos**, permitiendo estructurar el proceso de decisión de forma lógica y coherente.
+
+En el contexto de este estudio, el AHP se aplica para determinar **qué consultora estratégica resulta más adecuada para un perfil junior**, considerando múltiples factores cualitativos y cuantitativos.  
+El método parte de la definición de un **objetivo general**, un conjunto de **criterios de evaluación**, y un conjunto de **alternativas** (las firmas consultoras).  
+
+Posteriormente, los criterios se comparan **por pares** mediante juicios de preferencia expresados con la **escala fundamental de Saaty (1–9)**, la cual traduce percepciones subjetivas en valores numéricos.  
+A partir de estas comparaciones, el AHP permite calcular los **pesos relativos** de los criterios y, en etapas posteriores, determinar la **prioridad global de las alternativas**.  
+
+De este modo, el método proporciona un marco sistemático para la toma de decisiones que combina **juicio experto** con **análisis matemático**, garantizando transparencia, coherencia y trazabilidad en el proceso de selección.
+
+## Matriz de comparación de criterios
+
+El objetivo del proceso AHP es determinar qué criterios tienen mayor influencia en la elección de la consultora ideal para un perfil **junior**, es decir, recién incorporado al mundo de la consultoría estratégica.  
+Los juicios de comparación se basan en la **escala de Saaty (1–9)** y reflejan la percepción de un comité de evaluación compuesto por jóvenes consultores, tutores y profesores expertos.
+
+```{r}
+v_criterios <- c(
+  3,   # (C1 vs C2): Prestigio vs Aprendizaje
+  5,   # (C1 vs C3): Prestigio vs Cultura
+  3,   # (C1 vs C4): Prestigio vs ProyectosSectores
+  2,   # (C1 vs C5): Prestigio vs Remuneracion
+  2,   # (C2 vs C3): Aprendizaje vs Cultura
+  1/2, # (C2 vs C4): Aprendizaje vs ProyectosSectores
+  2,   # (C2 vs C5): Aprendizaje vs Remuneracion
+  1/3, # (C3 vs C4): Cultura vs ProyectosSectores
+  2,   # (C3 vs C5): Cultura vs Remuneracion
+  1/2  # (C4 vs C5): ProyectosSectores vs Remuneracion
+)
+```
+
+
+### Justificación de los juicios de comparación
+
+**1. Prestigio vs Aprendizaje (3)**  
+El **prestigio de la firma** se considera **moderadamente más importante** que las oportunidades de aprendizaje.  
+Aunque el desarrollo profesional es esencial, **la marca de la consultora** tiene un fuerte impacto inicial en el currículo y en las oportunidades futuras.  
+Por eso se asigna un valor **3**, que indica una **preferencia ligera pero significativa** por el prestigio.
+
+---
+
+**2. Prestigio vs Cultura (5)**  
+Se estima que el **prestigio** es **claramente más importante** que la cultura organizacional.  
+Las grandes firmas de referencia (McKinsey, BCG, Bain) ofrecen entornos exigentes, pero el peso reputacional sigue siendo un factor dominante en la elección de juniors, especialmente al inicio de la carrera.
+
+---
+
+**3. Prestigio vs Proyectos y Sectores (3)**  
+El prestigio se considera **ligeramente más relevante** que la diversidad sectorial de proyectos.  
+Si bien trabajar en múltiples industrias aporta valor, el reconocimiento de la marca sigue teniendo un peso mayor en la decisión.
+
+---
+
+**4. Prestigio vs Remuneración (2)**  
+El prestigio supera **levemente** al criterio económico.  
+En perfiles iniciales, la diferencia salarial entre firmas top no suele ser determinante; la mayoría de juniors priorizan la marca y la proyección antes que el salario inmediato.
+
+---
+
+**5. Aprendizaje vs Cultura (2)**  
+Las **oportunidades de aprendizaje** se valoran **ligeramente más** que la cultura organizacional.  
+Se asume que, en el entorno competitivo de la consultoría, el aprendizaje técnico y metodológico es clave para el crecimiento profesional, incluso si el clima laboral es algo más exigente.
+
+---
+
+**6. Aprendizaje vs Proyectos y Sectores (1/2)**  
+Aquí se da un **peso ligeramente inferior** al aprendizaje frente a la variedad de proyectos.  
+En este contexto, se considera que trabajar en proyectos diversos y desafiantes **favorece el aprendizaje práctico**, por lo que se concede más valor a la exposición sectorial.
+
+---
+
+**7. Aprendizaje vs Remuneración (2)**  
+El aprendizaje se considera **moderadamente más importante** que la remuneración.  
+Los juniors suelen aceptar una retribución algo menor si la empresa ofrece una **curva de aprendizaje acelerada** y una **mentoría sólida**.
+
+---
+
+**8. Cultura vs Proyectos y Sectores (1/3)**  
+La **cultura organizacional** se percibe como **menos importante** que la variedad de proyectos.  
+Aun siendo relevante para la satisfacción personal, se entiende que la experiencia profesional y la exposición a diferentes industrias son determinantes para el desarrollo inicial.
+
+---
+
+**9. Cultura vs Remuneración (2)**  
+La cultura se valora **ligeramente más** que la remuneración.  
+El razonamiento es que, aunque el salario es importante, el **bienestar y equilibrio personal** pueden mejorar el rendimiento y la permanencia en la firma.
+
+---
+
+**10. Proyectos y Sectores vs Remuneración (1/2)**  
+Finalmente, la **remuneración** se considera **ligeramente más relevante** que la diversidad de proyectos.  
+Aunque los proyectos enriquecen la experiencia, una compensación justa puede ser un factor decisivo para retener talento joven.
+
+---
+
+#### Interpretación global
+
+En conjunto, esta valoración refleja una **priorización racional para un perfil junior**:
+
+- El **prestigio** es el criterio dominante (clave para la carrera).  
+- Le siguen el **aprendizaje** y los **proyectos**, muy vinculados al desarrollo profesional.  
+- La **cultura** y la **remuneración** pesan algo menos en esta etapa inicial, aunque no son irrelevantes.
+
+Estas comparaciones constituyen la base de la **matriz de criterios del método AHP**, a partir de la cual se calcularán los pesos relativos de cada criterio y se evaluará la **consistencia** de los juicios.
+
+
+
+
+
 
 ------------------------------------------------------------------------
 
