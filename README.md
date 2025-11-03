@@ -1,12 +1,12 @@
 # 🧭 Proyecto de Decisión Multicriterio – Elección de la Mejor Consultora Estratégica
 
-> *Trabajo práctico de Teoría de la Decisión Multicriterio (AHP, ELECTRE, PROMETHEE) – Posgrado en Consultoría Estratégica.*
+> *Trabajo práctico de Teoría de la Decisión (AHP, ELECTRE, PROMETHEE) – Grado en Estadística.*
 
 ---
 
 ## 📘 Descripción general
 
-Este proyecto aplica **técnicas de decisión multicriterio (MCDM)** para determinar cuál de las principales firmas de consultoría estratégica resulta **más adecuada para un perfil junior**, considerando criterios cualitativos y cuantitativos.  
+Este proyecto aplica **técnicas de decisión multicriterio** para determinar cuál de las principales firmas de consultoría estratégica resulta **más adecuada para un perfil junior**, considerando criterios cualitativos y cuantitativos.  
 
 El estudio se basa en el **Proceso Analítico Jerárquico (AHP)** en sus distintas variantes y se complementará con los métodos **ELECTRE** y **PROMETHEE**.
 
@@ -25,6 +25,7 @@ Seleccionar, entre cinco alternativas —**McKinsey, BCG, Bain, Oliver Wyman y E
 ---
 
 ## ⚙️ Estructura del proyecto
+```plaintext
 📂 decision-multicriterio-consultoras/
 ├── data/                          # Datos base y matrices de comparación
 ├── R/                             # Scripts R con funciones y cálculos intermedios
@@ -35,6 +36,7 @@ Seleccionar, entre cinco alternativas —**McKinsey, BCG, Bain, Oliver Wyman y E
 ├── proyecto_consultoras.qmd       # Documento principal (Quarto)
 ├── README.md                      # Este archivo
 └── outputs/                       # Tablas, gráficos y resultados finales
+```
 
 ---
 
