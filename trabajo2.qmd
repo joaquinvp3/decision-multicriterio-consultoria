@@ -758,6 +758,7 @@ pesos_remuneracion_mg <- pl_remuneracion_mg$valoraciones.ahp
 Una vez calculados los pesos de los criterios y los pesos locales de las alternativas según cada criterio mediante la **media geométrica**, el siguiente paso consiste en **integrar los resultados** para determinar la **prioridad global** de cada alternativa.
 
 Al igual que en el Método 1, la integración se realiza aplicando una **agregación ponderada**, donde cada alternativa recibe un peso global en función de:
+
 1. La **importancia relativa de cada criterio**, expresada en los pesos obtenidos en el nivel superior.
 2. Su **desempeño local** dentro de cada criterio, calculado ahora con el método de la media geométrica.
 
@@ -924,9 +925,57 @@ Calculate(modelo)
 Analyze(modelo)
 ```
 
-Para la visualización del modelo aplicamos `ahp::RunGUI()`. Como hemos visto en clase, nos llevará a un localhost donde analizaremos y visualizaremos nuestro modelo mediante interfaz. Para esto hemos de subir nuestro arhivho `modelo_consultoras.ahp`. Dejamos aquí imágenes.
+Para la visualización del modelo aplicamos `ahp::RunGUI()`. Como hemos visto en clase, nos llevará a un localhost donde analizaremos y visualizaremos nuestro modelo mediante interfaz. Para esto hemos de subir nuestro arhivho `modelo_consultoras.ahp`. Dejamos aquí imágenes:
 
+![Visualización jerárquica del modelo AHP](img/visual.png){width=90%}
 
+![Análisis numérico del modelo AHP](img/analisis.png){width=90%}
+
+Cerramos así nuestro análásis del modelo mediante AHP.
+
+## Conclusión final
+
+Tras la aplicación de las distintas variantes del **Proceso Analítico Jerárquico (AHP)**, los resultados obtenidos son altamente consistentes y convergentes.  
+Los cuatro métodos empleados —**autovector del mayor autovalor (Método 1)**, **media geométrica (Método 2)**, **AHP completo (Método 3)** y **modelo jerárquico YAML con `ahp` (Método 6)**— conducen a una misma estructura de preferencias globales:
+
+> **McKinsey > BCG > Bain > Oliver Wyman > EY-Parthenon**
+
+Este orden refleja una **jerarquía estable y robusta** entre las alternativas, independientemente de la técnica de agregación utilizada.
+
+---
+
+### 🧠 Interpretación estratégica de los resultados
+
+El análisis muestra que **McKinsey** obtiene la **mayor prioridad global** en todos los modelos, lo que la consolida como la alternativa más atractiva para un perfil junior en consultoría estratégica.  
+Su liderazgo proviene de un **equilibrio óptimo entre prestigio, aprendizaje, diversidad de proyectos y remuneración**, factores que, combinados, maximizan la utilidad global.
+
+**BCG** se posiciona en segundo lugar, muy próxima a McKinsey, debido a su sólida reputación, cultura meritocrática y potencial de desarrollo profesional.  
+**Bain** aparece consistentemente en tercera posición: presenta buenos valores en cultura y aprendizaje, pero con un menor peso en prestigio y proyección internacional.
+
+En los niveles inferiores, **Oliver Wyman** destaca por su entorno cultural positivo y tamaño intermedio, pero se ve penalizada por menor proyección y remuneración.  
+**EY-Parthenon** muestra un perfil competitivo en clima y proyectos, aunque con menor reconocimiento y estructura global.
+
+---
+
+### 🔍 Robustez metodológica
+
+El hecho de que las cuatro variantes del método AHP —basadas en procedimientos de cálculo distintos— produzcan **resultados prácticamente idénticos** valida la **coherencia y estabilidad del modelo de decisión**.  
+La consistencia obtenida en las matrices de comparación confirma que los juicios emitidos son **coherentes y racionales**, cumpliendo con el principio de transitividad del AHP (CR < 0.10).
+
+---
+
+### 📈 Conclusión general del bloque AHP
+
+Los resultados de AHP permiten concluir que:
+
+- **McKinsey** es la **alternativa dominante**, combinando la máxima prioridad global con consistencia plena en todos los criterios.  
+- **BCG** y **Bain** forman un segundo grupo de alto rendimiento, atractivas pero ligeramente menos dominantes.  
+- **Oliver Wyman** y **EY-Parthenon** se sitúan en posiciones de menor preferencia, aunque con fortalezas particulares en cultura y clima laboral.
+
+En conjunto, el método AHP ofrece una **visión compensatoria y ponderada** del problema: una alternativa puede mejorar su posición global gracias a un desempeño excelente en varios criterios, incluso si no lidera en todos ellos.  
+En la siguiente sección, se abordará el método **ELECTRE**, que introduce una perspectiva **no compensatoria**, permitiendo comprobar si los resultados de dominancia permanecen estables bajo un enfoque de sobreclasificación.
+
+\newpage
 
 
 
@@ -935,8 +984,8 @@ Para la visualización del modelo aplicamos `ahp::RunGUI()`. Como hemos visto en
 El método **ELECTRE** (*ELimination Et Choix Traduisant la REalité*) pertenece a la familia de técnicas de **decisión multicriterio de tipo no compensatorio**, diseñadas para comparar alternativas en función de su **grado de dominancia parcial**.  
 A diferencia del AHP, que obtiene un vector de prioridades globales, ELECTRE construye una **relación de sobreclasificación** basada en dos índices fundamentales:
 
-1. **Índice de concordancia**, que mide en qué medida una alternativa *a_i* es al menos tan buena como otra *a_j* considerando los criterios ponderados en los que no es peor.
-2. **Índice de discordancia**, que refleja los criterios donde *a_i* es significativamente peor que *a_j*, actuando como “veto” a la sobreclasificación.
+1. **Índice de concordancia**, que mide en qué medida una alternativa $*a_i*$ es al menos tan buena como otra $*a_j*$ considerando los criterios ponderados en los que no es peor.
+2. **Índice de discordancia**, que refleja los criterios donde $*a_i*$ es significativamente peor que $*a_j*$, actuando como “veto” a la sobreclasificación.
 
 El resultado no es necesariamente una jerarquía completa, sino un **grafo dirigido** que expresa las relaciones de dominancia entre las alternativas.  
 Posteriormente, mediante la identificación del **núcleo de alternativas no dominadas**, se pueden determinar las opciones más robustas.
@@ -1050,3 +1099,44 @@ El **núcleo de alternativas no dominadas** se compone únicamente de **McKinsey
 
 Comparado con el método AHP, ELECTRE aporta una perspectiva **no compensatoria**, demostrando que la superioridad de McKinsey no depende de compensaciones entre criterios, sino de un desempeño consistentemente alto en todos ellos.  
 El modelo ELECTRE I, por tanto, valida y robustece los resultados obtenidos con los métodos AHP previos.
+
+\newpage
+
+# Método PROMETHEE – Análisis de preferencia multicriterio
+
+El método **PROMETHEE** (*Preference Ranking Organization METHod for Enrichment Evaluations*), desarrollado por **Brans y Vincke (1985)**, pertenece a la familia de técnicas **de sobreclasificación**, al igual que ELECTRE, pero ofrece un enfoque **más intuitivo y parametrizable** para el análisis de decisiones multicriterio.
+
+A diferencia de AHP, que busca una agregación compensatoria de prioridades, o de ELECTRE, que se centra en la concordancia y discordancia, PROMETHEE cuantifica **el grado de preferencia de una alternativa sobre otra** en función de las **diferencias de desempeño** entre ellas para cada criterio, aplicando una **función de preferencia** específica a cada caso.
+
+Cada criterio tiene por tanto:
+
+- Un **peso** que refleja su importancia relativa.
+- Una **función de preferencia** (*Preference Function*) que traduce la diferencia entre alternativas en un valor entre 0 y 1.
+
+El método PROMETHEE se desarrolla en varias etapas:
+
+1. **Construcción de la matriz de decisión**, con los valores de desempeño de cada alternativa en cada criterio (beneficio o coste).  
+2. **Aplicación de funciones de preferencia** $P_j(a_i, a_k)$ para cada criterio $j$.  
+3. **Cálculo de los flujos de preferencia**:
+   - **Flujo positivo** $\phi^+$: mide en qué grado una alternativa domina a las demás.  
+   - **Flujo negativo** $\phi^-$: mide en qué grado una alternativa es dominada por las demás.  
+   - **Flujo neto** $\phi = \phi^+ - \phi^-$: refleja la posición global de cada alternativa.  
+4. **Obtención del ranking PROMETHEE I (parcial)** y **PROMETHEE II (completo)**.
+
+El **PROMETHEE I** genera una relación de preferencia parcial (puede haber empates o incomparabilidades), mientras que el **PROMETHEE II** ordena completamente las alternativas según su flujo neto.
+
+En este trabajo se aplicará **PROMETHEE II**, dado que permite una **ordenación global completa** comparable con los resultados obtenidos mediante AHP y ELECTRE.
+
+Se utilizarán los mismos conjuntos de:
+- **Alternativas:** McKinsey, BCG, Bain, Oliver Wyman y EY-Parthenon.  
+- **Criterios:** Prestigio, Aprendizaje, Cultura, ProyectosSectores y Remuneracion.  
+- **Pesos:** similares a los definidos en ELECTRE (ligeramente distintos a los de AHP para contrastar la robustez del modelo).  
+
+Finalmente, el método se implementará utilizando las **funciones del profesor definidas en**:
+`teoriadecision_funciones_multicriterio_utiles.R`,  
+lo que garantiza coherencia con la metodología utilizada en clase.
+
+## Rewsolución mediante PROMETHEE
+
+**Paso 1: Matriz de decisión**
+Tenemos ya 
