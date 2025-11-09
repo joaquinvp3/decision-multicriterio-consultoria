@@ -218,22 +218,7 @@ Permite resolver el sistema jerárquico completo (criterios y alternativas) en u
 El método automatiza el cálculo de pesos locales, globales y la consistencia del modelo.  
 Función empleada: `multicriterio.metodoAHP.variante3.completo()`.
 
----
-
-#### **Método 4 – AHP multinivel (básico)**  
-Se aplica de forma estructurada **por niveles jerárquicos**, combinando manualmente los pesos de criterios y de alternativas.  
-Es especialmente útil cuando la jerarquía contiene subcriterios intermedios.  
-Función empleada: `multicriterio.metodoAHP.variante3.basico()`.
-
----
-
-#### **Método 5 – AHP con representación jerárquica (DiagrammeR)**  
-Incorpora la **visualización del árbol jerárquico** del modelo mediante la librería DiagrammeR, lo que permite representar de forma gráfica la relación entre objetivo, criterios y alternativas.  
-Función empleada: `multicriterio.metodoahp.diagrama()`.
-
----
-
-#### **Método 6 – AHP con paquete oficial `ahp`**  
+#### **Método 4 – AHP con paquete oficial `ahp`**  
 El paquete `ahp` de R implementa el método a partir de un archivo de configuración en formato **YAML**, que define la jerarquía, los pesos y las comparaciones.  
 Permite ejecutar el análisis y visualizar los resultados de manera interactiva.  
 Principales funciones: `ahp::Load()`, `ahp::Calculate()`, `ahp::RunGUI()`.
@@ -1136,7 +1121,135 @@ Finalmente, el método se implementará utilizando las **funciones del profesor 
 `teoriadecision_funciones_multicriterio_utiles.R`,  
 lo que garantiza coherencia con la metodología utilizada en clase.
 
-## Rewsolución mediante PROMETHEE
+## Resolución mediante PROMETHEE
 
-**Paso 1: Matriz de decisión**
-Tenemos ya 
+**Paso 1: Matriz de decisión y pesso**
+
+Tenemos ya los valores previamente definidos. Usaremos los objetos `alts`,`crits`,`vector_valores`,`mat_decision` y `pesos_criterios`.
+
+```{r}
+tabdec.cons <- multicriterio.crea.matrizdecision(
+  vector_matporfilas = vector_valores,
+  numalternativas    = length(alts),
+  numcriterios       = length(crits),
+  v.nombresalt       = alts,
+  v.nombrescri       = crits
+)
+```
+
+**Funciones de preferencia**
+
+```{r}
+# Diseño de funciones:
+# - Prestigio: V-shape (tipo 3) con p=1   (diferencias se traducen progresivamente)
+# - Aprendizaje: V-shape (tipo 3) con p=1.5
+# - Cultura: Level (tipo 4) con q=0.3, p=1.2
+# - ProyectosSectores: Linear (tipo 5) con q=0.5, p=2
+# - Remuneracion: U-shape (tipo 2) con q=0.3
+
+tab.fpref.cons <- matrix(
+  c(
+    3, 0,   1, 0,   # Prestigio
+    3, 0,   1.5, 0,   # Aprendizaje
+    4, 0.3, 1.2, 0,   # Cultura
+    5, 0.5, 2.0, 0,   # ProyectosSectores
+    2, 0.3, 1,   0    # Remuneracion
+  ),
+  ncol = 4, byrow = TRUE
+)
+rownames(tab.fpref.cons) <- crits
+colnames(tab.fpref.cons) <- c("tipo","q","p","s")
+tab.fpref.cons
+```
+
+**Aplicacion de PROMETHEE I y PROMETHEE II**
+
+```{r}
+# PROMETHEE I
+res_prom_I <- multicriterio.metodo.promethee_i(
+  tabdec.cons, pesos_criterios, tab.fpref.cons
+)
+res_prom_I
+```
+
+### Interpretación de los resultados del método PROMETHEE I
+
+El método **PROMETHEE I** genera una relación de sobreclasificación parcial entre las alternativas, basada en los **flujos de preferencia positivos y negativos**.  
+La matriz de índices muestra un **claro predominio de McKinsey**, cuyas puntuaciones de preferencia frente al resto son las más altas (por encima de 0.8 frente a Oliver Wyman y EY-Parthenon).
+
+El **flujo positivo ($\phi^+$)** indica la capacidad de una alternativa para dominar a las demás, mientras que el **flujo negativo ($\phi^-$)** mide su grado de dominación.  
+Así, **McKinsey** presenta el **mayor flujo de salida** y el **menor flujo de entrada**, lo que evidencia su posición de liderazgo en el conjunto de alternativas.  
+En cambio, **EY-Parthenon** y **Oliver Wyman** muestran flujos negativos altos, siendo las opciones más dominadas.
+
+La **tabla de relaciones de superación** corrobora esta jerarquía:
+> McKinsey > BCG > Bain > Oliver Wyman > EY-Parthenon
+
+No se observan incomparabilidades relevantes (todas las relaciones son estrictas), por lo que el **PROMETHEE I** en este caso ofrece una ordenación completa muy próxima a la del **PROMETHEE II**.  
+Esto confirma la **consistencia y robustez** del modelo: los resultados son coherentes con los obtenidos previamente mediante **AHP** y **ELECTRE**, reforzando la conclusión de que **McKinsey** es la alternativa óptima según los criterios establecidos.
+
+
+```{r}
+# PROMETHEE II (completo)
+res_prom_II <- multicriterio.metodo.promethee_ii(
+  tabdec.cons, pesos_criterios, tab.fpref.cons
+)
+res_prom_II
+order(res_prom_II$vflujos.netos, decreasing = TRUE) # ranking final por φ neto
+```
+
+### Interpretación de los resultados del método PROMETHEE II
+
+El método **PROMETHEE II** ofrece una **ordenación completa de las alternativas** a partir de los **flujos netos de preferencia**, que combinan la información de dominancia (flujo positivo) y dominación (flujo negativo).  
+
+Los resultados obtenidos son:
+
+| Alternativa | Flujo neto (φ) |
+|--------------|---------------:|
+| **McKinsey**      | **+2.8125** |
+| **BCG**           | **+1.6875** |
+| **Bain**          | **+0.0625** |
+| **Oliver Wyman**  | **−2.0417** |
+| **EY-Parthenon**  | **−2.5208** |
+
+El **ranking final** derivado del flujo neto es:
+
+> **McKinsey > BCG > Bain > Oliver Wyman > EY-Parthenon**
+
+Este resultado muestra una **estructura de preferencias perfectamente consistente** con los métodos previos (AHP y ELECTRE), consolidando la robustez del proceso de decisión.  
+
+- **McKinsey** destaca claramente con el flujo neto más alto, confirmando su **posición dominante**.  
+- **BCG** ocupa una segunda posición sólida, con un desempeño global equilibrado.  
+- **Bain** presenta un flujo neto cercano a cero, lo que sugiere una posición intermedia, sin dominancias ni debilidades extremas.  
+- **Oliver Wyman** y **EY-Parthenon** poseen flujos netos negativos, reflejando un menor nivel de preferencia global.
+
+El método PROMETHEE II, a diferencia de AHP y ELECTRE, no solo determina la **posición relativa** de las alternativas, sino también la **intensidad de la preferencia** entre ellas, permitiendo observar la distancia entre posiciones.  
+En este caso, la diferencia entre **McKinsey** y **BCG** es significativa, lo que refuerza su ventaja competitiva como alternativa óptima para el perfil analizado.
+
+## Conclusión final
+
+El análisis desarrollado mediante el método **PROMETHEE**, tanto en su versión I como en la versión II, ha permitido consolidar los resultados obtenidos en los métodos anteriores (AHP y ELECTRE) y aportar una perspectiva adicional basada en la **intensidad de las preferencias** entre alternativas.
+
+La aplicación del modelo ha mostrado una jerarquía clara y coherente en los **flujos de preferencia**:
+
+> **McKinsey > BCG > Bain > Oliver Wyman > EY-Parthenon**
+
+Este ordenamiento refleja una **consistencia estructural completa** con las conclusiones previas, pero con la ventaja de que PROMETHEE introduce una escala continua de preferencia que cuantifica el grado de dominancia entre alternativas.  
+Mientras que AHP y ELECTRE trabajan sobre juicios de comparación o relaciones de sobreclasificación, PROMETHEE traduce las diferencias de desempeño en **valores cardinales de preferencia**, ponderados según los criterios definidos y sus funciones de preferencia.
+
+En términos estratégicos, los resultados confirman que:
+
+- **McKinsey** se mantiene como la **alternativa óptima global**, con un flujo neto claramente superior al resto. Su liderazgo se sustenta en un equilibrio sobresaliente entre prestigio, aprendizaje y proyección internacional.  
+- **BCG**, con un flujo neto también positivo y elevado, constituye una **segunda opción altamente competitiva**, próxima en estructura a McKinsey pero con una ligera desventaja en prestigio y proyectos.  
+- **Bain** se sitúa en una posición **intermedia**, destacando en cultura organizativa y equilibrio, aunque sin la dominancia global de las dos primeras.  
+- **Oliver Wyman** y **EY-Parthenon** presentan **flujos netos negativos**, reflejando un menor grado de preferencia global, aunque con fortalezas puntuales en criterios como cultura o cercanía.
+
+Desde el punto de vista metodológico, PROMETHEE se distingue por:
+
+1. Su **flexibilidad** al incorporar diferentes **funciones de preferencia** (Usual, U-shape, V-shape, Level, Linear, Gaussian), adaptadas al comportamiento real de cada criterio.  
+2. Su capacidad de ofrecer **información más rica** que un simple ranking, al mostrar los **flujos positivos, negativos y netos**, permitiendo interpretar las distancias entre alternativas.  
+3. Su naturaleza **no compensatoria**, lo que evita que una alternativa con valores extremos en un criterio compense totalmente un mal desempeño en otro.
+
+En conjunto, el método PROMETHEE **valida y refuerza** la decisión multicriterio planteada en este estudio.  
+El **orden de preferencia se mantiene estable** frente a los métodos AHP y ELECTRE, lo que demuestra la **robustez del modelo** y la **consistencia de los juicios** emitidos.
+
+Se concluye, por tanto, que **McKinsey** es la consultora que ofrece el **mejor balance global** para un perfil junior que busca maximizar prestigio, aprendizaje y proyección profesional dentro del sector de la consultoría estratégica.
