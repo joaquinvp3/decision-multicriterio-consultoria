@@ -257,7 +257,9 @@ kbl(
     Criterio = names(pesos_criterios),
     Peso = round(pesos_criterios, 4)),
     caption = "Pesos de los criterios obtenidos por el Método 1 
-    (autovector principal)"
+    (autovector principal)",
+    booktabs = TRUE,
+    row.names = FALSE
 ) %>%
   kable_styling(latex_options = "HOLD_position")
 ```
@@ -335,7 +337,8 @@ library(kableExtra)
 kbl(
   data.frame(Alternativa = alts, Peso = round(pesos_prestigio, 4)),
   caption = "Pesos locales de las alternativas según el criterio «Prestigio»",
-  booktabs = TRUE
+  booktabs = TRUE,
+  row.names = FALSE
 ) %>%
   kable_styling(latex_options = "HOLD_position")
 ```
@@ -393,7 +396,8 @@ library(kableExtra)
 kbl(
   data.frame(Alternativa = alts, Peso = round(pesos_aprendizaje, 4)),
   caption = "Pesos locales de las alternativas según el criterio Aprendizaje",
-  booktabs = TRUE
+  booktabs = TRUE,
+  row.names = FALSE
 ) %>%
   kable_styling(latex_options = "HOLD_position")
 ```
@@ -454,7 +458,8 @@ kbl(
   data.frame(Alternativa = alts, Peso = round(pesos_cultura, 4)),
   caption = "Pesos locales de las alternativas según el criterio 
   Cultura organizacional",
-  booktabs = TRUE
+  booktabs = TRUE,
+  row.names = FALSE
 ) %>%
   kable_styling(latex_options = "HOLD_position")
 ```
@@ -516,7 +521,8 @@ kbl(
   data.frame(Alternativa = alts, Peso = round(pesos_proyectos, 4)),
   caption = "Pesos locales de las alternativas según el criterio 
   Proyectos y Sectores",
-  booktabs = TRUE
+  booktabs = TRUE,
+  row.names = FALSE
 ) %>%
   kable_styling(latex_options = "HOLD_position")
 ```
@@ -577,7 +583,8 @@ library(kableExtra)
 kbl(
   data.frame(Alternativa = alts, Peso = round(pesos_remuneracion, 4)),
   caption = "Pesos locales de las alternativas según el criterio Remuneración",
-  booktabs = TRUE
+  booktabs = TRUE,
+  row.names = FALSE
 ) %>%
   kable_styling(latex_options = "HOLD_position")
 ```
@@ -638,6 +645,7 @@ tabla_global
 ```
 
 **Paso 3 · Presentación y ranking final**
+
 Mostramos la tabla final con formato y ordenamos las alternativas por su **peso global** (de mayor a menor).
 
 
@@ -896,6 +904,7 @@ Su ventaja es doble: (i) proporciona una **estructura declarativa y auditable** 
 En este trabajo reutilizaremos **los mismos juicios** definidos en los métodos anteriores (criterios y matrices de alternativas), de modo que el modelo con `ahp` sea estrictamente **comparables** con los resultados previos.  
 
 **Qué haremos:**
+
 1. **Construir el fichero YAML** del modelo (de forma programática desde R para garantizar reproducibilidad).
 2. **Cargar y calcular** el modelo con `ahp::Load()` y `ahp::Calculate()`.
 3. **Obtener prioridades** de criterios y alternativas, y el **ranking global**.
@@ -904,8 +913,8 @@ En este trabajo reutilizaremos **los mismos juicios** definidos en los métodos 
 
 
 ```{r}
-install.packages("devtools")
-devtools::install_github("calote/ahp", build_vignettes = TRUE)
+#install.packages("devtools")
+# devtools::install_github("calote/ahp", build_vignettes = F)
 library(ahp)
 ```
 
@@ -913,5 +922,127 @@ library(ahp)
 modelo <- Load("modelo_consultoras.ahp")
 Calculate(modelo)
 Analyze(modelo)
-RunGUI(modelo) 
 ```
+
+Para la visualización del modelo aplicamos `ahp::RunGUI()`. Como hemos visto en clase, nos llevará a un localhost donde analizaremos y visualizaremos nuestro modelo mediante interfaz. Para esto hemos de subir nuestro arhivho modelo_consultoras.ahp.
+
+# Aplicación del Método ELECTRE
+
+El método **ELECTRE** (*ELimination Et Choix Traduisant la REalité*) pertenece a la familia de técnicas de **decisión multicriterio de tipo no compensatorio**, diseñadas para comparar alternativas en función de su **grado de dominancia parcial**.  
+A diferencia del AHP, que obtiene un vector de prioridades globales, ELECTRE construye una **relación de sobreclasificación** basada en dos índices fundamentales:
+
+1. **Índice de concordancia**, que mide en qué medida una alternativa *a_i* es al menos tan buena como otra *a_j* considerando los criterios ponderados en los que no es peor.
+2. **Índice de discordancia**, que refleja los criterios donde *a_i* es significativamente peor que *a_j*, actuando como “veto” a la sobreclasificación.
+
+El resultado no es necesariamente una jerarquía completa, sino un **grafo dirigido** que expresa las relaciones de dominancia entre las alternativas.  
+Posteriormente, mediante la identificación del **núcleo de alternativas no dominadas**, se pueden determinar las opciones más robustas.
+
+En este trabajo aplicaremos **ELECTRE I**, el cual es el más clásico y didáctico de la familia ELECTRE.  
+Utilizaremos las funciones del profesor definidas en los archivos:
+
+- `teoriadecision_funciones_multicriterio.R`  
+- `teoriadecision_funciones_multicriterio_diagram.R`
+
+Este método se aplicará al mismo conjunto de **cinco consultoras estratégicas** (McKinsey, BCG, Bain, Oliver Wyman y EY-Parthenon) valoradas según los **cinco criterios** definidos en los métodos AHP anteriores:
+
+- Prestigio  
+- Aprendizaje  
+- Cultura organizacional  
+- Proyectos y sectores  
+- Remuneración  
+
+De esta forma, podremos contrastar los resultados obtenidos por AHP —de carácter **compensatorio**— con los de ELECTRE, donde una alternativa que destaque en varios criterios **no puede ser compensada completamente por un mal desempeño en otro**.
+
+En los siguientes bloques se construirán:
+
+1. La **matriz de decisión** (valores de desempeño de cada consultora en cada criterio).  
+2. La **normalización y ponderación** de criterios.  
+3. El **índice de concordancia** y el **índice de discordancia**.  
+4. El **grafo de sobreclasificación** y la **identificación del núcleo óptimo**.
+
+## Definicón de alternativas, criterios y matriz de decisión
+
+Comencemos importando las funciones que usaremos para el método ELECTRE
+
+```{r}
+source("funciones_auxiliares/teoriadecision_funciones_multicriterio.R")
+source("funciones_auxiliares/teoriadecision_funciones_multicriterio_utiles.R")
+```
+
+Ahora definiremos nuestros vectores de alternativa y criterios.
+
+```{r}
+alts  <- c("McKinsey","BCG","Bain","OliverWyman","EY-Parthenon")
+crits <- c("Prestigio","Aprendizaje","Cultura","ProyectosSectores","Remuneracion")
+
+# McKinsey domina, seguida de BCG, luego Bain, OW y EY-P.
+vector_valores <- c(
+  # Prestigio, Aprendizaje, Cultura, ProyectosSectores, Remuneracion
+  10, 9, 7, 9, 8,   # McKinsey
+  9, 8.5, 7.5, 8, 7.5,   # BCG
+  8, 8, 7.5, 7, 7,       # Bain
+  6.5, 6.5, 8, 6, 6.5,   # Oliver Wyman
+  6, 6, 8.5, 6, 6        # EY-Parthenon
+)
+
+mat_decision <- multicriterio.crea.matrizdecision(
+  vector_matporfilas = vector_valores,
+  numalternativas    = length(alts),
+  numcriterios       = length(crits),
+  v.nombresalt       = alts,
+  v.nombrescri       = crits
+)
+
+mat_decision
+```
+
+Ahora veamos los pesos de los distintos criterios:
+
+```{r}
+pesos_electre <- c(
+  Prestigio         = 0.28,
+  Aprendizaje       = 0.25,
+  Cultura           = 0.18,
+  ProyectosSectores = 0.17,
+  Remuneracion      = 0.12
+)
+pesos_electre <- pesos_electre / sum(pesos_electre)
+pesos_electre
+```
+
+## Ejecución del método ELECTRE
+
+```{r}
+alpha <- 0.70                    # nivel mínimo de concordancia
+veto  <- c(Inf, Inf, Inf, Inf, Inf)   # sin veto (ajustable después)
+
+# Ejecución del método ELECTRE I
+sal_electre <- multicriterio.metodoELECTRE_I(
+  mat_decision,
+  pesos.criterios = as.numeric(pesos_electre),
+  nivel.concordancia.minimo.alpha = alpha,
+  no.se.compensan = veto
+)
+
+# Resultados principales
+sal_electre$nucleo_aprox          # alternativas no dominadas (núcleo)
+sal_electre$relacion.dominante    # matriz de sobreclasificación
+```
+
+Podemos también ver la salida completa mediante la función de clase `func_ELECTRE_Completo()`:
+
+```{r}
+detalles <- func_ELECTRE_Completo(sal_electre)
+detalles$Grafo # Aquí tenemos el grafo de dominancia.
+```
+
+**Interpretación ELECTRE I**
+El análisis ELECTRE I confirma los resultados obtenidos con AHP, evidenciando una jerarquía clara entre las cinco consultoras.  
+La matriz de sobreclasificación muestra que **McKinsey** sobreclasifica a todas las demás alternativas, situándose como la **opción más robusta y dominante** del modelo.  
+**BCG** ocupa una segunda posición firme, superando a Bain, Oliver Wyman y EY-Parthenon, mientras que **Bain** se mantiene en una posición intermedia.  
+Por su parte, **Oliver Wyman** solo domina a EY-Parthenon, y esta última no sobreclasifica a ninguna, reflejando su posición más débil.
+
+El **núcleo de alternativas no dominadas** se compone únicamente de **McKinsey**, lo que refuerza su liderazgo global en todos los criterios analizados.  
+
+Comparado con el método AHP, ELECTRE aporta una perspectiva **no compensatoria**, demostrando que la superioridad de McKinsey no depende de compensaciones entre criterios, sino de un desempeño consistentemente alto en todos ellos.  
+El modelo ELECTRE I, por tanto, valida y robustece los resultados obtenidos con los métodos AHP previos.
