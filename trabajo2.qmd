@@ -924,7 +924,11 @@ Calculate(modelo)
 Analyze(modelo)
 ```
 
-Para la visualización del modelo aplicamos `ahp::RunGUI()`. Como hemos visto en clase, nos llevará a un localhost donde analizaremos y visualizaremos nuestro modelo mediante interfaz. Para esto hemos de subir nuestro arhivho modelo_consultoras.ahp.
+Para la visualización del modelo aplicamos `ahp::RunGUI()`. Como hemos visto en clase, nos llevará a un localhost donde analizaremos y visualizaremos nuestro modelo mediante interfaz. Para esto hemos de subir nuestro arhivho `modelo_consultoras.ahp`. Dejamos aquí imágenes.
+
+
+
+
 
 # Aplicación del Método ELECTRE
 
