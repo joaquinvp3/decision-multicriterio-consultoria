@@ -1074,6 +1074,7 @@ detalles$Grafo # Aquí tenemos el grafo de dominancia.
 ```
 
 **Interpretación ELECTRE I**
+
 El análisis ELECTRE I confirma los resultados obtenidos con AHP, evidenciando una jerarquía clara entre las cinco consultoras.  
 La matriz de sobreclasificación muestra que **McKinsey** sobreclasifica a todas las demás alternativas, situándose como la **opción más robusta y dominante** del modelo.  
 **BCG** ocupa una segunda posición firme, superando a Bain, Oliver Wyman y EY-Parthenon, mientras que **Bain** se mantiene en una posición intermedia.  
