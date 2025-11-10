@@ -882,7 +882,7 @@ Desde una perspectiva analítica:
 La convergencia de resultados entre las tres variantes del AHP (autovector, media geométrica y completo) confirma que el modelo de decisión propuesto es **robusto, coherente y estable** frente a distintas formulaciones del método.  
 Ello aporta **validez metodológica** y **confiabilidad interpretativa** a las conclusiones obtenidas en el análisis multicriterio de la elección de consultora estratégica.
 
-### Método 6 – AHP con el paquete `ahp`
+### Método 4 – AHP con el paquete `ahp`
 
 El paquete **`ahp`** permite modelar el Proceso Analítico Jerárquico a partir de un fichero **YAML** que define la **jerarquía** (objetivo → criterios → alternativas) y las **comparaciones por pares** en cada nivel.  
 Su ventaja es doble: (i) proporciona una **estructura declarativa y auditable** del modelo, y (ii) ofrece funciones para **cálculo, análisis y visualización** (incluida una interfaz Shiny) sin necesidad de programar los pasos de agregación manualmente.
@@ -921,7 +921,7 @@ Cerramos así nuestro análásis del modelo mediante AHP.
 ## Conclusión final
 
 Tras la aplicación de las distintas variantes del **Proceso Analítico Jerárquico (AHP)**, los resultados obtenidos son altamente consistentes y convergentes.  
-Los cuatro métodos empleados —**autovector del mayor autovalor (Método 1)**, **media geométrica (Método 2)**, **AHP completo (Método 3)** y **modelo jerárquico YAML con `ahp` (Método 6)**— conducen a una misma estructura de preferencias globales:
+Los cuatro métodos empleados —**autovector del mayor autovalor (Método 1)**, **media geométrica (Método 2)**, **AHP completo (Método 3)** y **modelo jerárquico YAML con `ahp` (Método 5)**— conducen a una misma estructura de preferencias globales:
 
 > **McKinsey > BCG > Bain > Oliver Wyman > EY-Parthenon**
 
@@ -969,8 +969,8 @@ En la siguiente sección, se abordará el método **ELECTRE**, que introduce una
 El método **ELECTRE** (*ELimination Et Choix Traduisant la REalité*) pertenece a la familia de técnicas de **decisión multicriterio de tipo no compensatorio**, diseñadas para comparar alternativas en función de su **grado de dominancia parcial**.  
 A diferencia del AHP, que obtiene un vector de prioridades globales, ELECTRE construye una **relación de sobreclasificación** basada en dos índices fundamentales:
 
-1. **Índice de concordancia**, que mide en qué medida una alternativa $*a_i*$ es al menos tan buena como otra $*a_j*$ considerando los criterios ponderados en los que no es peor.
-2. **Índice de discordancia**, que refleja los criterios donde $*a_i*$ es significativamente peor que $*a_j*$, actuando como “veto” a la sobreclasificación.
+1. **Índice de concordancia**, que mide en qué medida una alternativa $a_i$ es al menos tan buena como otra $a_j$ considerando los criterios ponderados en los que no es peor.
+2. **Índice de discordancia**, que refleja los criterios donde $a_i$ es significativamente peor que $a_j$, actuando como “veto” a la sobreclasificación.
 
 El resultado no es necesariamente una jerarquía completa, sino un **grafo dirigido** que expresa las relaciones de dominancia entre las alternativas.  
 Posteriormente, mediante la identificación del **núcleo de alternativas no dominadas**, se pueden determinar las opciones más robustas.
@@ -998,7 +998,7 @@ En los siguientes bloques se construirán:
 3. El **índice de concordancia** y el **índice de discordancia**.  
 4. El **grafo de sobreclasificación** y la **identificación del núcleo óptimo**.
 
-## Definicón de alternativas, criterios y matriz de decisión
+## Definición de alternativas, criterios y matriz de decisión
 
 Comencemos importando las funciones que usaremos para el método ELECTRE
 
@@ -1052,7 +1052,7 @@ pesos_electre
 
 ```{r}
 alpha <- 0.70                    # nivel mínimo de concordancia
-veto  <- c(Inf, Inf, Inf, Inf, Inf)   # sin veto (ajustable después)
+veto  <- c(Inf, Inf, Inf, Inf, Inf)   # sin veto (ajustable)
 
 # Ejecución del método ELECTRE I
 sal_electre <- multicriterio.metodoELECTRE_I(
@@ -1113,6 +1113,7 @@ El **PROMETHEE I** genera una relación de preferencia parcial (puede haber empa
 En este trabajo se aplicará **PROMETHEE II**, dado que permite una **ordenación global completa** comparable con los resultados obtenidos mediante AHP y ELECTRE.
 
 Se utilizarán los mismos conjuntos de:
+
 - **Alternativas:** McKinsey, BCG, Bain, Oliver Wyman y EY-Parthenon.  
 - **Criterios:** Prestigio, Aprendizaje, Cultura, ProyectosSectores y Remuneracion.  
 - **Pesos:** similares a los definidos en ELECTRE (ligeramente distintos a los de AHP para contrastar la robustez del modelo).  
@@ -1253,3 +1254,56 @@ En conjunto, el método PROMETHEE **valida y refuerza** la decisión multicriter
 El **orden de preferencia se mantiene estable** frente a los métodos AHP y ELECTRE, lo que demuestra la **robustez del modelo** y la **consistencia de los juicios** emitidos.
 
 Se concluye, por tanto, que **McKinsey** es la consultora que ofrece el **mejor balance global** para un perfil junior que busca maximizar prestigio, aprendizaje y proyección profesional dentro del sector de la consultoría estratégica.
+
+# Conclusión final del análisis multicriterio
+
+El presente trabajo ha aplicado de manera sistemática tres de los principales métodos de decisión multicriterio —**AHP**, **ELECTRE** y **PROMETHEE**— para evaluar y seleccionar la consultora estratégica más adecuada para un perfil junior que prioriza el equilibrio entre prestigio, aprendizaje, cultura, diversidad de proyectos y remuneración.
+
+Cada técnica ha ofrecido una visión complementaria del problema:
+
+1. **AHP (Analytic Hierarchy Process)** permitió estructurar el problema de decisión en una jerarquía de criterios y subcriterios, transformando juicios cualitativos en pesos cuantitativos y verificando su consistencia lógica.  
+   Los resultados revelaron una jerarquía clara:  
+   **McKinsey > BCG > Bain > Oliver Wyman > EY-Parthenon**.
+
+2. **ELECTRE**, como método de sobreclasificación, incorporó la noción de concordancia y discordancia, reduciendo la compensación entre criterios y permitiendo identificar el **núcleo de alternativas no dominadas**.  
+   Nuevamente, **McKinsey** emergió como la única alternativa dominante, con una fuerte relación de sobreclasificación sobre el resto.
+
+3. **PROMETHEE**, en sus versiones I y II, ofreció un análisis más granular de las **intensidades de preferencia**, utilizando funciones de preferencia específicas para cada criterio.  
+   El ranking obtenido fue idéntico al de los métodos anteriores, reforzando la robustez y coherencia del modelo.
+
+---
+
+## Síntesis de resultados
+
+| Método      | Enfoque principal                  | Resultado final |
+|--------------|------------------------------------|------------------|
+| **AHP**      | Jerarquía de criterios, comparaciones pareadas, modelo compensatorio | McKinsey > BCG > Bain > OW > EY-P |
+| **ELECTRE I**| Sobreclasificación (concordancia/discordancia), modelo no compensatorio | McKinsey núcleo dominante |
+| **PROMETHEE II** | Flujos de preferencia, funciones específicas por criterio, análisis de intensidad | McKinsey > BCG > Bain > OW > EY-P |
+
+Los tres métodos convergen en una **estructura de preferencias estable y coherente**, con **McKinsey** posicionándose consistentemente como la alternativa óptima, seguida de **BCG** y **Bain** en un segundo nivel.  
+**Oliver Wyman** y **EY-Parthenon**, aunque con atributos positivos en aspectos culturales y de clima laboral, quedan relegadas por su menor puntuación global en criterios de prestigio y remuneración.
+
+---
+
+## Interpretación estratégica
+
+Desde una perspectiva estratégica, el análisis sugiere que **McKinsey** representa la opción más atractiva para un candidato junior que busca maximizar su desarrollo profesional y su posicionamiento dentro del sector.  
+Su liderazgo en prestigio, amplitud de proyectos y oportunidades de aprendizaje la consolidan como la alternativa más completa.
+
+**BCG** constituye una segunda opción muy sólida, especialmente para perfiles que valoren un entorno intelectual similar con una cultura algo más flexible.  
+**Bain**, por su parte, mantiene un perfil competitivo, destacando por su cultura organizativa y buen equilibrio interno.
+
+Los métodos aplicados han permitido comprobar que las conclusiones son **robustas frente a variaciones en los pesos o en el enfoque metodológico**, lo cual aporta validez y fiabilidad a la decisión final.
+
+---
+
+## Conclusión general
+
+La utilización conjunta de AHP, ELECTRE y PROMETHEE ha demostrado la utilidad de la **toma de decisiones multicriterio** en contextos complejos, permitiendo integrar juicios subjetivos, información cuantitativa y estructuras jerárquicas de preferencia en un modelo coherente y reproducible.
+
+La convergencia de los tres métodos hacia un mismo resultado confirma que el proceso de evaluación fue **consistente y racional**, cumpliendo los principios de la teoría de decisión multicriterio.
+
+> En definitiva, el análisis concluye que **McKinsey** es la consultora que ofrece el mejor equilibrio global para un perfil junior, combinando excelencia en prestigio, oportunidades de aprendizaje, diversidad de proyectos y remuneración competitiva.
+
+---
