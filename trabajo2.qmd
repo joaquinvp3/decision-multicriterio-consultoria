@@ -21,7 +21,7 @@ source("funciones_auxiliares/teoriadecision_funciones_multicriterio_diagram.R")
 
 # Introducción y planteamiento del problema
 
-El objetivo de este trabajo es aplicar distintos métodos de **decisión multicriterio** (AHP, ELECTRE, PROMETHEE y TOPSIS) para seleccionar la **mejor consultora estratégica** para un grupo de consultores juniors.\
+El objetivo de este trabajo es aplicar distintos métodos de **decisión multicriterio** (AHP, ELECTRE, y PROMETHEE) para seleccionar la **mejor consultora estratégica** para un grupo de consultores juniors.\
 Las alternativas evaluadas serán:
 
 -   McKinsey & Company\
@@ -46,7 +46,6 @@ Aquí se especificarán los criterios de evaluación, que pueden incluir, por ej
 | Proyectos y sectores         | Diversidad de industrias y clientes |
 | Remuneración                 | Nivel salarial y beneficios         |
 
-------------------------------------------------------------------------
 
 Definiremos nuestro vector de criterios que usaremos en las distintas resoluciones.
 
@@ -1087,7 +1086,7 @@ El modelo ELECTRE I, por tanto, valida y robustece los resultados obtenidos con 
 
 \newpage
 
-# Método PROMETHEE – Análisis de preferencia multicriterio
+# Método PROMETHEE
 
 El método **PROMETHEE** (*Preference Ranking Organization METHod for Enrichment Evaluations*), desarrollado por **Brans y Vincke (1985)**, pertenece a la familia de técnicas **de sobreclasificación**, al igual que ELECTRE, pero ofrece un enfoque **más intuitivo y parametrizable** para el análisis de decisiones multicriterio.
 
@@ -1254,6 +1253,8 @@ En conjunto, el método PROMETHEE **valida y refuerza** la decisión multicriter
 El **orden de preferencia se mantiene estable** frente a los métodos AHP y ELECTRE, lo que demuestra la **robustez del modelo** y la **consistencia de los juicios** emitidos.
 
 Se concluye, por tanto, que **McKinsey** es la consultora que ofrece el **mejor balance global** para un perfil junior que busca maximizar prestigio, aprendizaje y proyección profesional dentro del sector de la consultoría estratégica.
+
+\newpage
 
 # Conclusión final del análisis multicriterio
 
