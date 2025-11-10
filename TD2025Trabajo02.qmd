@@ -1086,7 +1086,7 @@ El modelo ELECTRE I, por tanto, valida y robustece los resultados obtenidos con 
 
 \newpage
 
-# Método PROMETHEE
+# Aplicación del Método PROMETHEE
 
 El método **PROMETHEE** (*Preference Ranking Organization METHod for Enrichment Evaluations*), desarrollado por **Brans y Vincke (1985)**, pertenece a la familia de técnicas **de sobreclasificación**, al igual que ELECTRE, pero ofrece un enfoque **más intuitivo y parametrizable** para el análisis de decisiones multicriterio.
 
