@@ -1254,6 +1254,10 @@ El **orden de preferencia se mantiene estable** frente a los métodos AHP y ELEC
 
 Se concluye, por tanto, que **McKinsey** es la consultora que ofrece el **mejor balance global** para un perfil junior que busca maximizar prestigio, aprendizaje y proyección profesional dentro del sector de la consultoría estratégica.
 
+El método PROMETHEE también puede implementarse mediante el software *Visual PROMETHEE*, una herramienta gráfica específica para Windows[^nota-macos].
+
+[^nota-macos]: Debido a tengo sistema **macOS**, no he podido ejecutar la resolución en dicho programa.
+
 \newpage
 
 # Conclusión final del análisis multicriterio
