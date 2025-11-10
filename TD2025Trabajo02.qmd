@@ -1257,7 +1257,7 @@ Se concluye, por tanto, que **McKinsey** es la consultora que ofrece el **mejor 
 
 El método PROMETHEE también puede implementarse mediante el software *Visual PROMETHEE*, una herramienta gráfica específica para Windows[^nota-macos].
 
-[^nota-macos]: Debido a tengo sistema **macOS**, no he podido ejecutar la resolución en dicho programa.
+[^nota-macos]: Debido a que tengo sistema **macOS**, no he podido ejecutar la resolución en dicho programa.
 
 \newpage
 
